@@ -3,8 +3,6 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    
-    // Сильная ссылка на делегат
     private var loginInspector: LoginInspector?
     
     func scene(_ scene: UIScene,
@@ -15,22 +13,58 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
         
-        // ✅ ИСПОЛЬЗУЕМ ФАБРИКУ для создания LoginInspector
+        // Фабрика для LoginInspector
         let factory = MyLoginFactory()
         let inspector = factory.makeLoginInspector()
-        
-        // Сохраняем сильную ссылку
         self.loginInspector = inspector
         
+        // LoginViewController
         let loginVC = LoginViewController()
         loginVC.loginDelegate = inspector
+        let loginNavController = UINavigationController(rootViewController: loginVC)
+        loginNavController.tabBarItem = UITabBarItem(
+            title: "Login",
+            image: UIImage(systemName: "person.crop.circle"),
+            tag: 0
+        )
         
-        let navController = UINavigationController(rootViewController: loginVC)
+        // ProfileViewController
+        let profileVC = ProfileViewController()
+        let profileNavController = UINavigationController(rootViewController: profileVC)
+        profileNavController.tabBarItem = UITabBarItem(
+            title: "Profile",
+            image: UIImage(systemName: "person.fill"),
+            tag: 1
+        )
         
-        window.rootViewController = navController
+        // FeedViewController
+        let feedVC = FeedViewController()
+        let feedNavController = UINavigationController(rootViewController: feedVC)
+        feedNavController.tabBarItem = UITabBarItem(
+            title: "Feed",
+            image: UIImage(systemName: "newspaper"),
+            tag: 2
+        )
+        
+        // ✅ PhotosViewController (ДОБАВЬТЕ ЭТУ ВКЛАДКУ)
+        let photosVC = PhotosViewController()
+        let photosNavController = UINavigationController(rootViewController: photosVC)
+        photosNavController.tabBarItem = UITabBarItem(
+            title: "Photos",
+            image: UIImage(systemName: "photo.on.rectangle"),
+            tag: 3
+        )
+        
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [
+            loginNavController,
+            profileNavController,
+            feedNavController,
+            photosNavController   // ← Добавьте сюда
+        ]
+        
+        window.rootViewController = tabBarController
         self.window = window
         window.makeKeyAndVisible()
-        
-        print("✅ loginDelegate установлен через фабрику: \(loginVC.loginDelegate != nil)")
     }
 }
