@@ -27,8 +27,8 @@ class PhotosViewController: UIViewController {
     }
     
     deinit {
-        // Временно убираем отписку, пока не найдём правильный метод
-        // imagePublisherFacade?.removeSubscriber(self)
+        // TODO: найти правильный метод отписки в ImagePublisherFacade
+        // imagePublisherFacade?.unsubscribe(self)
         print("✅ PhotosViewController: deinit вызван")
     }
     
