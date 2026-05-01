@@ -46,7 +46,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             tag: 2
         )
         
-        // ✅ PhotosViewController (ДОБАВЬТЕ ЭТУ ВКЛАДКУ)
+        // ✅ PhotosViewController (ДЛЯ ЗАДАНИЯ OBSERVER/FACADE)
         let photosVC = PhotosViewController()
         let photosNavController = UINavigationController(rootViewController: photosVC)
         photosNavController.tabBarItem = UITabBarItem(
@@ -60,7 +60,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             loginNavController,
             profileNavController,
             feedNavController,
-            photosNavController   // ← Добавьте сюда
+            photosNavController   // ← ДОБАВЛЕН
         ]
         
         window.rootViewController = tabBarController

@@ -27,8 +27,9 @@ class PhotosViewController: UIViewController {
     }
     
     deinit {
-        imagePublisherFacade?.removeSubscriber(self)
-        print("✅ PhotosViewController: подписка отменена")
+        // Временно убираем отписку, пока не найдём правильный метод
+        // imagePublisherFacade?.removeSubscriber(self)
+        print("✅ PhotosViewController: deinit вызван")
     }
     
     private func setupCollectionView() {
