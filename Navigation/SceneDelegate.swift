@@ -46,7 +46,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             tag: 2
         )
         
-        // ✅ PhotosViewController (ДЛЯ ЗАДАНИЯ OBSERVER/FACADE)
         let photosVC = PhotosViewController()
         let photosNavController = UINavigationController(rootViewController: photosVC)
         photosNavController.tabBarItem = UITabBarItem(
