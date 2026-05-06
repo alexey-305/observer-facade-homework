@@ -107,6 +107,7 @@
 				3601A2B028490DDF000D261A /* Assets.xcassets */,
 				3601A2B228490DDF000D261A /* LaunchScreen.storyboard */,
 				3601A2B528490DDF000D261A /* Info.plist */,
+				37818D4A2FAB0E2B0081E513 /* Views */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -156,6 +157,13 @@
 				376AEC5A2F9F5FD700408171 /* LoginFactory.swift */,
 			);
 			path = Factories;
+			sourceTree = "<group>";
+		};
+		37818D4A2FAB0E2B0081E513 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
