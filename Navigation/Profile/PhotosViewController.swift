@@ -56,15 +56,8 @@ class PhotosViewController: UIViewController {
 
 extension PhotosViewController: ImageLibrarySubscriber {
     func receive(images: [UIImage]) {
-<<<<<<< Updated upstream
-        self.images.append(contentsOf: images)
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-        }
-=======
         self.images = images
         collectionView.reloadData()
->>>>>>> Stashed changes
     }
 }
 
