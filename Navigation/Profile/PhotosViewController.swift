@@ -27,8 +27,6 @@ class PhotosViewController: UIViewController {
     }
     
     deinit {
-        // TODO: найти правильный метод отписки в ImagePublisherFacade
-        // imagePublisherFacade?.unsubscribe(self)
         print("✅ PhotosViewController: deinit вызван")
     }
     
@@ -49,8 +47,24 @@ class PhotosViewController: UIViewController {
     
     private func setupImagePublisher() {
         imagePublisherFacade = ImagePublisherFacade()
+        
+        // Загружаем ваши изображения из Assets (цифры 1...20)
+        var customImages: [UIImage] = []
+        for i in 1...20 {
+            if let image = UIImage(named: "\(i)") {
+                customImages.append(image)
+            }
+        }
+        
+        // Передаём их паблишеру
+        imagePublisherFacade?.addImagesWithTimer(
+            images: customImages,
+            time: 0.5,
+            repeat: 15
+        )
+        
+        // Подписываемся на получение
         imagePublisherFacade?.subscribe(self)
-        imagePublisherFacade?.addImagesWithTimer(time: 0.5, repeat: 15)
     }
 }
 
