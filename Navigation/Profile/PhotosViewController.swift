@@ -27,6 +27,8 @@ class PhotosViewController: UIViewController {
     }
     
     deinit {
+        // TODO: найти правильный метод отписки в ImagePublisherFacade
+        // imagePublisherFacade?.unsubscribe(self)
         print("✅ PhotosViewController: deinit вызван")
     }
     
@@ -54,9 +56,15 @@ class PhotosViewController: UIViewController {
 
 extension PhotosViewController: ImageLibrarySubscriber {
     func receive(images: [UIImage]) {
-        // ✅ ИСПРАВЛЕНО по рекомендации преподавателя
+<<<<<<< Updated upstream
+        self.images.append(contentsOf: images)
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
+=======
         self.images = images
         collectionView.reloadData()
+>>>>>>> Stashed changes
     }
 }
 
