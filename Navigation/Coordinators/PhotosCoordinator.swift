@@ -1,0 +1,16 @@
+import UIKit
+
+class PhotosCoordinator: Coordinator {
+    
+    var childCoordinators: [Coordinator] = []
+    var navigationController: UINavigationController
+    
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
+    }
+    
+    func start() {
+        let photosVC = PhotosViewController()
+        navigationController.setViewControllers([photosVC], animated: false)
+    }
+}
