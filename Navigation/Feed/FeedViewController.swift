@@ -1,11 +1,13 @@
 import UIKit
 
-class FeedViewController: UIViewController {
+final class FeedViewController: UIViewController {
     
     // MARK: - Properties
-    private let feedModel = FeedModel()
+    
+    private let viewModel: FeedViewModelProtocol = FeedViewModel()
     
     // MARK: - UI Elements
+    
     private let guessTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Угадайте слово..."
@@ -39,6 +41,7 @@ class FeedViewController: UIViewController {
     }()
     
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -48,9 +51,11 @@ class FeedViewController: UIViewController {
         setupViews()
         setupConstraints()
         setupActions()
+        bindViewModel()
     }
     
     // MARK: - Setup
+    
     private func setupViews() {
         view.addSubview(guessTextField)
         view.addSubview(checkGuessButton)
@@ -59,6 +64,7 @@ class FeedViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            
             guessTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             guessTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
             guessTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -77,29 +83,29 @@ class FeedViewController: UIViewController {
     }
     
     private func setupActions() {
+        
         checkGuessButton.action = { [weak self] in
-            self?.checkGuess()
+            
+            guard let self else { return }
+            
+            self.viewModel.checkGuess(
+                self.guessTextField.text ?? ""
+            )
         }
     }
     
-    // MARK: - Logic
-    private func checkGuess() {
-        guard let guess = guessTextField.text, !guess.isEmpty else {
-            resultLabel.text = "Пожалуйста, введите слово"
-            resultLabel.textColor = .red
-            return
+    // MARK: - Binding
+    
+    private func bindViewModel() {
+        
+        viewModel.onStateChanged = { [weak self] in
+            
+            guard let self else { return }
+            
+            self.resultLabel.text = self.viewModel.resultText
+            self.resultLabel.textColor = self.viewModel.resultColor
+            
+            self.guessTextField.text = ""
         }
-        
-        let isCorrect = feedModel.check(word: guess)
-        
-        if isCorrect {
-            resultLabel.text = "✅ Верно! Загаданное слово: \(feedModel.secretWordForDisplay)"
-            resultLabel.textColor = .green
-        } else {
-            resultLabel.text = "❌ Неверно! Попробуйте ещё раз"
-            resultLabel.textColor = .red
-        }
-        
-        guessTextField.text = ""
     }
 }

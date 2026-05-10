@@ -1,114 +1,121 @@
-//
-//  ProfileViewController.swift
-//  Navigation
-//
-
 import UIKit
 
-final class ProfileViewController: UIViewController {
+class ProfileViewController: UIViewController {
     
-    static let headerIdent = "header"
-    static let photoIdent = "photo"
-    static let postIdent = "post"
+    // MARK: - Properties
+    var viewModel: ProfileViewModelProtocol! {
+        didSet {
+            setupBindings()
+        }
+    }
     
-    static var postTableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .grouped)
-        table.translatesAutoresizingMaskIntoConstraints = false
-        table.register(ProfileHeaderView.self, forHeaderFooterViewReuseIdentifier: headerIdent)
-        table.register(PhotosTableViewCell.self, forCellReuseIdentifier: photoIdent)
-        table.register(PostTableViewCell.self, forCellReuseIdentifier: postIdent)
-        return table
+    private let tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
     }()
     
-    // MARK: - Setup section
+    private let refreshControl = UIRefreshControl()
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .systemBackground
         
-        view.addSubview(Self.postTableView)
+        view.backgroundColor = .white
+        title = "Profile"
+        
+        setupTableView()
         setupConstraints()
-        Self.postTableView.dataSource = self
-        Self.postTableView.delegate = self
-        Self.postTableView.refreshControl = UIRefreshControl()
-        Self.postTableView.refreshControl?.addTarget(self, action: #selector(reloadTableView), for: .valueChanged)
+        
+        if viewModel == nil {
+            viewModel = ProfileViewModel()
+        }
+        
+        viewModel.loadData()
+    }
+    
+    // MARK: - Setup
+    private func setupTableView() {
+        view.addSubview(tableView)
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(PostTableViewCell.self, forCellWithReuseIdentifier: "PostCell")
+        tableView.separatorStyle = .none
+        tableView.estimatedRowHeight = 400
+        tableView.rowHeight = UITableView.automaticDimension
+        
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        tableView.refreshControl = refreshControl
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            Self.postTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            Self.postTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            Self.postTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            Self.postTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-
-    @objc func reloadTableView() {
-        Self.postTableView.reloadData()
-        Self.postTableView.refreshControl?.endRefreshing()
-    }
-}
-
-// MARK: - Extensions
-
-extension ProfileViewController: UITableViewDataSource {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0: return 1
-        case 1: return postExamples.count
-        default:
-            assertionFailure("no registered section")
-            return 1
+    
+    private func setupBindings() {
+        viewModel.onDataUpdated = { [weak self] in
+            DispatchQueue.main.async {
+                self?.refreshControl.endRefreshing()
+                self?.tableView.reloadData()
+            }
         }
     }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+    
+    // MARK: - Actions
+    @objc private func refreshData() {
+        viewModel.loadData()
     }
 }
 
-extension ProfileViewController: UITableViewDelegate {
+// MARK: - UITableViewDataSource
+extension ProfileViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.posts.count
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case 0:
-            let cell = Self.postTableView.dequeueReusableCell(withIdentifier: Self.photoIdent, for: indexPath) as! PhotosTableViewCell
-            return cell
-        case 1:
-            let cell = Self.postTableView.dequeueReusableCell(withIdentifier: Self.postIdent, for: indexPath) as! PostTableViewCell
-            cell.configPostArray(post: postExamples[indexPath.row])
-            return cell
-        default:
-            assertionFailure("no registered section")
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as? PostTableViewCell else {
             return UITableViewCell()
         }
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard section == 0 else { return nil }
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Self.headerIdent) as! ProfileHeaderView
-        return headerView
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section == 0 ? 220 : 0
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch indexPath.section {
-        case 0:
-            tableView.deselectRow(at: indexPath, animated: false)
-            navigationController?.pushViewController(PhotosViewController(), animated: true)
-        case 1:
-            guard let cell = tableView.cellForRow(at: indexPath) else { return }
-            if let post = cell as? PostTableViewCell {
-                post.incrementPostViewsCounter()
-            }
-        default:
-            assertionFailure("no registered section")
-        }
+        cell.configure(with: viewModel.posts[indexPath.row])
+        return cell
     }
 }
 
+// MARK: - UITableViewDelegate
+extension ProfileViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let user = viewModel.user else { return nil }
+        let header = ProfileHeaderView()
+        header.configure(with: user)
+        
+        header.onStatusChanged = { [weak self] newStatus in
+            self?.viewModel.updateStatus(newStatus)
+        }
+        
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 220
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        print("Нажат пост: \(viewModel.posts[indexPath.row].author)")
+    }
+}
