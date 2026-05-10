@@ -4,12 +4,18 @@ struct User {
     let login: String
     let fullName: String
     let avatar: UIImage
-    let status: String
+    var status: String          // ← var, а не let
 }
 
 protocol UserService {
     var user: User { get set }
     func getUser(login: String) -> User?
+}
+
+extension UserService {
+    func getUser(login: String) -> User? {
+        return login == user.login ? user : nil
+    }
 }
 
 class TestUserService: UserService {
@@ -28,10 +34,6 @@ class TestUserService: UserService {
     init(user: User) {
         self.user = user
     }
-    
-    func getUser(login: String) -> User? {
-        return login == user.login ? user : nil
-    }
 }
 
 class CurrentUserService: UserService {
@@ -39,9 +41,5 @@ class CurrentUserService: UserService {
     
     init(user: User) {
         self.user = user
-    }
-    
-    func getUser(login: String) -> User? {
-        return login == user.login ? user : nil
     }
 }
