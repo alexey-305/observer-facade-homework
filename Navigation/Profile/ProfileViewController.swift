@@ -1,18 +1,28 @@
 import UIKit
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
     
-    var viewModel: ProfileViewModelProtocol! {
-        didSet {
-            setupBindings()
-        }
-    }
+    weak var coordinator: ProfileCoordinator?
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
+    
+    private var posts: [Post] = [
+        Post(author: "cat_lover_2024", description: "Сегодня мой кот поймал солнечного зайчика! 🐱☀️", image: "1", likes: 120, views: 456),
+        Post(author: "hipster_cat", description: "Новый диван - новое место для сна.", image: "2", likes: 89, views: 234),
+        Post(author: "crazy_cat_lady", description: "Купила новую игрушку, а кот играет с коробкой.", image: "3", likes: 256, views: 789),
+        Post(author: "philosopher_cat", description: "Зачем люди ходят на работу?", image: "4", likes: 445, views: 1234)
+    ]
+    
+    private let testUser = User(
+        login: "1234",
+        fullName: "Hipster Cat",
+        avatar: UIImage(named: "avatar") ?? UIImage(),
+        status: "Waiting for something..."
+    )
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,11 +32,8 @@ class ProfileViewController: UIViewController {
         setupTableView()
         setupConstraints()
         
-        if viewModel == nil {
-            viewModel = ProfileViewModel()
-        }
-        
-        viewModel.loadData()
+        tableView.estimatedRowHeight = 400
+        tableView.rowHeight = UITableView.automaticDimension
     }
     
     private func setupTableView() {
@@ -35,8 +42,6 @@ class ProfileViewController: UIViewController {
         tableView.delegate = self
         tableView.register(PostTableViewCell.self, forCellReuseIdentifier: "PostCell")
         tableView.separatorStyle = .none
-        tableView.estimatedRowHeight = 400
-        tableView.rowHeight = UITableView.automaticDimension
     }
     
     private func setupConstraints() {
@@ -47,44 +52,32 @@ class ProfileViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-    
-    private func setupBindings() {
-        viewModel.onDataUpdated = { [weak self] in
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
-            }
-        }
-    }
 }
 
+// MARK: - UITableViewDataSource
 extension ProfileViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.posts.count
+        return posts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as? PostTableViewCell else {
             return UITableViewCell()
         }
-        cell.configPostArray(post: viewModel.posts[indexPath.row])
+        cell.configPostArray(post: posts[indexPath.row])
         return cell
     }
 }
 
+// MARK: - UITableViewDelegate
 extension ProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let user = viewModel.user else { return nil }
         let header = ProfileHeaderView()
-        header.configure(with: user)
-        
-        header.onStatusChanged = { [weak self] newStatus in
-            self?.viewModel.updateStatus(newStatus)
-        }
-        
+        header.configure(with: testUser)
         return header
     }
     
@@ -94,5 +87,10 @@ extension ProfileViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        coordinator?.showPostDetails(posts[indexPath.row])
     }
 }

@@ -1,11 +1,11 @@
 import UIKit
 
-class FeedViewController: UIViewController {
+final class FeedViewController: UIViewController {
     
-    // MARK: - Properties
+    weak var coordinator: FeedCoordinator?
+    
     private let feedModel = FeedModel()
     
-    // MARK: - UI Elements
     private let guessTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Угадайте слово..."
@@ -20,12 +20,14 @@ class FeedViewController: UIViewController {
         return textField
     }()
     
-    private let checkGuessButton: CustomButton = {
-        return CustomButton(
-            title: "Проверить",
-            titleColor: .white,
-            backgroundColor: .systemBlue
-        )
+    private let checkGuessButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Проверить", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemBlue
+        button.layer.cornerRadius = 10
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     private let resultLabel: UILabel = {
@@ -38,10 +40,8 @@ class FeedViewController: UIViewController {
         return label
     }()
     
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .white
         title = "Feed"
         
@@ -50,7 +50,6 @@ class FeedViewController: UIViewController {
         setupActions()
     }
     
-    // MARK: - Setup
     private func setupViews() {
         view.addSubview(guessTextField)
         view.addSubview(checkGuessButton)
@@ -77,13 +76,10 @@ class FeedViewController: UIViewController {
     }
     
     private func setupActions() {
-        checkGuessButton.action = { [weak self] in
-            self?.checkGuess()
-        }
+        checkGuessButton.addTarget(self, action: #selector(checkGuess), for: .touchUpInside)
     }
     
-    // MARK: - Logic
-    private func checkGuess() {
+    @objc private func checkGuess() {
         guard let guess = guessTextField.text, !guess.isEmpty else {
             resultLabel.text = "Пожалуйста, введите слово"
             resultLabel.textColor = .red
