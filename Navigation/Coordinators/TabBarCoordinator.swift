@@ -31,6 +31,15 @@ class TabBarCoordinator: Coordinator {
         childCoordinators.append(profileCoordinator)
         profileNavController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle"), tag: 1)
         
-        tabBarController.viewControllers = [feedNavController, profileNavController]
+        // Photos
+        let photosVC = PhotosViewController()
+        let photosNavController = UINavigationController(rootViewController: photosVC)
+        photosNavController.tabBarItem = UITabBarItem(title: "Photos", image: UIImage(systemName: "photo.on.rectangle"), tag: 2)
+        
+        tabBarController.viewControllers = [
+            feedNavController,
+            profileNavController,
+            photosNavController
+        ]
     }
 }
