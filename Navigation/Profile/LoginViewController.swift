@@ -1,11 +1,8 @@
-//
-//  LoginViewController.swift
-//  Navigation
-//
-
 import UIKit
 
-final class LoginViewController: UIViewController {
+class LoginViewController: UIViewController {
+    
+    weak var loginDelegate: LoginViewControllerDelegate?
     
     // MARK: Visual content
     
