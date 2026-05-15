@@ -9,15 +9,16 @@ class LoginViewController: UIViewController {
     private var strongLoginDelegate: LoginViewControllerDelegate?
     var onLoginSuccess: (() -> Void)?
     
-    // MARK: - Brute Force Properties
-    private let bruteForceService = BruteForceService()
-    private var generatedPassword = ""
-    
     func setDelegate(_ delegate: LoginViewControllerDelegate) {
         self.strongLoginDelegate = delegate
         self.loginDelegate = delegate
         print("🟢 setDelegate вызван, loginDelegate = \(loginDelegate != nil ? "установлен" : "НЕ установлен")")
     }
+    
+    // MARK: - Timer Properties
+    private var timer: Timer?
+    private var secondsElapsed = 0
+    private let timerLimit = 30
     
     // MARK: - UI Elements
     private let scrollView: UIScrollView = {
@@ -96,22 +97,26 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-    // MARK: - Brute Force UI Elements
-    private let bruteForceButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Подобрать пароль", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemGreen
-        button.layer.cornerRadius = 10
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    // MARK: - Timer UI Elements
+    private let timerLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Время на экране: 0 сек"
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .gray
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
-    private let activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .medium)
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        indicator.hidesWhenStopped = true
-        return indicator
+    private let tipLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = .systemOrange
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     // MARK: - Lifecycle
@@ -127,7 +132,7 @@ class LoginViewController: UIViewController {
         setupKeyboardObservers()
         setupButtonAction()
         setupTapGesture()
-        setupBruteForceButton()
+        startTimer()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -149,8 +154,8 @@ class LoginViewController: UIViewController {
         contentView.addSubview(logoImageView)
         contentView.addSubview(stackView)
         contentView.addSubview(loginButton)
-        contentView.addSubview(bruteForceButton)
-        contentView.addSubview(activityIndicator)
+        contentView.addSubview(timerLabel)
+        contentView.addSubview(tipLabel)
         
         stackView.addArrangedSubview(loginTextField)
         stackView.addArrangedSubview(passwordTextField)
@@ -184,14 +189,14 @@ class LoginViewController: UIViewController {
             loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             loginButton.heightAnchor.constraint(equalToConstant: 50),
             
-            bruteForceButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 20),
-            bruteForceButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            bruteForceButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            bruteForceButton.heightAnchor.constraint(equalToConstant: 50),
-            bruteForceButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
+            timerLabel.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 30),
+            timerLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            timerLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
-            activityIndicator.centerYAnchor.constraint(equalTo: bruteForceButton.centerYAnchor),
-            activityIndicator.trailingAnchor.constraint(equalTo: bruteForceButton.trailingAnchor, constant: -16)
+            tipLabel.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 12),
+            tipLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            tipLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            tipLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -20)
         ])
     }
     
@@ -212,10 +217,6 @@ class LoginViewController: UIViewController {
     
     private func setupButtonAction() {
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
-    }
-    
-    private func setupBruteForceButton() {
-        bruteForceButton.addTarget(self, action: #selector(bruteForceTapped), for: .touchUpInside)
     }
     
     private func setupTapGesture() {
@@ -240,7 +241,42 @@ class LoginViewController: UIViewController {
         view.endEditing(true)
     }
     
-    // MARK: - Login Actions
+    // MARK: - Timer Methods
+    private func startTimer() {
+        stopTimer()
+        secondsElapsed = 0
+        timerLabel.text = "Время на экране: 0 сек"
+        tipLabel.text = ""
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    @objc private func updateTimer() {
+        secondsElapsed += 1
+        timerLabel.text = "Время на экране: \(secondsElapsed) сек"
+        
+        if secondsElapsed >= timerLimit {
+            stopTimer()
+            showTip()
+        }
+    }
+    
+    private func showTip() {
+        let tips = [
+            "👀 Может, пора войти?",
+            "⏰ Вы здесь уже 30 секунд!",
+            "💡 Введите логин 1234 и пароль 0987",
+            "🔐 Попробуйте войти в приложение",
+            "🎯 Ваша цель — войти в профиль"
+        ]
+        tipLabel.text = tips.randomElement()
+    }
+    
+    // MARK: - Actions
     @objc private func loginButtonTapped() {
         print("🟢 loginButtonTapped, instanceId = \(instanceId), loginDelegate = \(loginDelegate != nil ? "установлен" : "НЕ установлен")")
         
@@ -258,46 +294,12 @@ class LoginViewController: UIViewController {
         let isSuccess = delegate.check(login: login, password: password)
         
         if isSuccess {
+            stopTimer()
             print("✅ Успешный вход")
             onLoginSuccess?()
         } else {
             showAlert(message: "Invalid login or password")
         }
-    }
-    
-    // MARK: - Brute Force Actions
-    @objc private func bruteForceTapped() {
-        let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        let length = Int.random(in: 3...4)
-        var randomPassword = ""
-        for _ in 0..<length {
-            randomPassword.append(characters.randomElement()!)
-        }
-        generatedPassword = randomPassword
-        print("🔐 Сгенерирован пароль: \(generatedPassword)")
-        
-        activityIndicator.startAnimating()
-        bruteForceButton.isEnabled = false
-        passwordTextField.isSecureTextEntry = true
-        passwordTextField.text = ""
-        
-        bruteForceService.onPasswordFound = { [weak self] password in
-            DispatchQueue.main.async {
-                self?.activityIndicator.stopAnimating()
-                self?.bruteForceButton.isEnabled = true
-                self?.passwordTextField.text = password
-                self?.passwordTextField.isSecureTextEntry = false
-                print("✅ Пароль подобран: \(password)")
-            }
-        }
-        
-        bruteForceService.onProgressUpdate = { [weak self] currentGuess in
-            DispatchQueue.main.async {
-                self?.passwordTextField.text = currentGuess
-            }
-        }
-        
-        bruteForceService.startBruteForce(targetPassword: generatedPassword)
     }
     
     private func showAlert(message: String) {
