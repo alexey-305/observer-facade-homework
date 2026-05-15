@@ -9,6 +9,10 @@ class LoginViewController: UIViewController {
     private var strongLoginDelegate: LoginViewControllerDelegate?
     var onLoginSuccess: (() -> Void)?
     
+    // MARK: - Brute Force Properties
+    private let bruteForceService = BruteForceService()
+    private var generatedPassword = ""
+    
     func setDelegate(_ delegate: LoginViewControllerDelegate) {
         self.strongLoginDelegate = delegate
         self.loginDelegate = delegate
@@ -92,6 +96,24 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Brute Force UI Elements
+    private let bruteForceButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Подобрать пароль", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemGreen
+        button.layer.cornerRadius = 10
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,6 +127,7 @@ class LoginViewController: UIViewController {
         setupKeyboardObservers()
         setupButtonAction()
         setupTapGesture()
+        setupBruteForceButton()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -125,11 +148,12 @@ class LoginViewController: UIViewController {
         
         contentView.addSubview(logoImageView)
         contentView.addSubview(stackView)
+        contentView.addSubview(loginButton)
+        contentView.addSubview(bruteForceButton)
+        contentView.addSubview(activityIndicator)
         
         stackView.addArrangedSubview(loginTextField)
         stackView.addArrangedSubview(passwordTextField)
-        
-        contentView.addSubview(loginButton)
     }
     
     private func setupConstraints() {
@@ -159,7 +183,15 @@ class LoginViewController: UIViewController {
             loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             loginButton.heightAnchor.constraint(equalToConstant: 50),
-            loginButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
+            
+            bruteForceButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 20),
+            bruteForceButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            bruteForceButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            bruteForceButton.heightAnchor.constraint(equalToConstant: 50),
+            bruteForceButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
+            
+            activityIndicator.centerYAnchor.constraint(equalTo: bruteForceButton.centerYAnchor),
+            activityIndicator.trailingAnchor.constraint(equalTo: bruteForceButton.trailingAnchor, constant: -16)
         ])
     }
     
@@ -180,6 +212,10 @@ class LoginViewController: UIViewController {
     
     private func setupButtonAction() {
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+    }
+    
+    private func setupBruteForceButton() {
+        bruteForceButton.addTarget(self, action: #selector(bruteForceTapped), for: .touchUpInside)
     }
     
     private func setupTapGesture() {
@@ -204,7 +240,7 @@ class LoginViewController: UIViewController {
         view.endEditing(true)
     }
     
-    // MARK: - Actions
+    // MARK: - Login Actions
     @objc private func loginButtonTapped() {
         print("🟢 loginButtonTapped, instanceId = \(instanceId), loginDelegate = \(loginDelegate != nil ? "установлен" : "НЕ установлен")")
         
@@ -227,6 +263,41 @@ class LoginViewController: UIViewController {
         } else {
             showAlert(message: "Invalid login or password")
         }
+    }
+    
+    // MARK: - Brute Force Actions
+    @objc private func bruteForceTapped() {
+        let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        let length = Int.random(in: 3...4)
+        var randomPassword = ""
+        for _ in 0..<length {
+            randomPassword.append(characters.randomElement()!)
+        }
+        generatedPassword = randomPassword
+        print("🔐 Сгенерирован пароль: \(generatedPassword)")
+        
+        activityIndicator.startAnimating()
+        bruteForceButton.isEnabled = false
+        passwordTextField.isSecureTextEntry = true
+        passwordTextField.text = ""
+        
+        bruteForceService.onPasswordFound = { [weak self] password in
+            DispatchQueue.main.async {
+                self?.activityIndicator.stopAnimating()
+                self?.bruteForceButton.isEnabled = true
+                self?.passwordTextField.text = password
+                self?.passwordTextField.isSecureTextEntry = false
+                print("✅ Пароль подобран: \(password)")
+            }
+        }
+        
+        bruteForceService.onProgressUpdate = { [weak self] currentGuess in
+            DispatchQueue.main.async {
+                self?.passwordTextField.text = currentGuess
+            }
+        }
+        
+        bruteForceService.startBruteForce(targetPassword: generatedPassword)
     }
     
     private func showAlert(message: String) {
