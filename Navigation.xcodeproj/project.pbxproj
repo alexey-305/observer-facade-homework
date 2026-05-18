@@ -42,6 +42,12 @@
 		37A4D1502FB4426400D4BEC2 /* FeedCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D14F2FB4426400D4BEC2 /* FeedCoordinator.swift */; };
 		37A4D1522FB4428F00D4BEC2 /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D1512FB4428F00D4BEC2 /* ProfileCoordinator.swift */; };
 		37A4D1582FB44DAA00D4BEC2 /* LoginInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D1572FB44DAA00D4BEC2 /* LoginInspector.swift */; };
+		37D31D952FBB0A32007E122A /* AudioPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D31D942FBB0A32007E122A /* AudioPlayerViewController.swift */; };
+		37D31DAF2FBB0C48007E122A /* Depeche Mode-Dangerous.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 37D31DAB2FBB0C48007E122A /* Depeche Mode-Dangerous.mp3 */; };
+		37D31DB02FBB0C48007E122A /* Depeche Mode-Its No Good.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 37D31DAC2FBB0C48007E122A /* Depeche Mode-Its No Good.mp3 */; };
+		37D31DB12FBB0C48007E122A /* Depeche Mode-Behind The Wheel.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 37D31DAA2FBB0C48007E122A /* Depeche Mode-Behind The Wheel.mp3 */; };
+		37D31DB32FBB0C48007E122A /* Depeche Mode-Walking in My Shoes.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 37D31DAE2FBB0C48007E122A /* Depeche Mode-Walking in My Shoes.mp3 */; };
+		37D31DB52FBB3A8F007E122A /* Depeche Mode-Little 15.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 37D31DB42FBB3A8F007E122A /* Depeche Mode-Little 15.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +87,12 @@
 		37A4D14F2FB4426400D4BEC2 /* FeedCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCoordinator.swift; sourceTree = "<group>"; };
 		37A4D1512FB4428F00D4BEC2 /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		37A4D1572FB44DAA00D4BEC2 /* LoginInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInspector.swift; sourceTree = "<group>"; };
+		37D31D942FBB0A32007E122A /* AudioPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerViewController.swift; sourceTree = "<group>"; };
+		37D31DAA2FBB0C48007E122A /* Depeche Mode-Behind The Wheel.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Depeche Mode-Behind The Wheel.mp3"; sourceTree = "<group>"; };
+		37D31DAB2FBB0C48007E122A /* Depeche Mode-Dangerous.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Depeche Mode-Dangerous.mp3"; sourceTree = "<group>"; };
+		37D31DAC2FBB0C48007E122A /* Depeche Mode-Its No Good.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Depeche Mode-Its No Good.mp3"; sourceTree = "<group>"; };
+		37D31DAE2FBB0C48007E122A /* Depeche Mode-Walking in My Shoes.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Depeche Mode-Walking in My Shoes.mp3"; sourceTree = "<group>"; };
+		37D31DB42FBB3A8F007E122A /* Depeche Mode-Little 15.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Depeche Mode-Little 15.mp3"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +126,8 @@
 		3601A2A628490DDF000D261A /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				37E16ACA2FBB06E800DEEF6A /* Audio */,
+				374DC2112FBAF98600C362FF /* Multimedia */,
 				37A4D1482FB4414E00D4BEC2 /* Coordinators */,
 				37955C2E2FB09ECD00A7D935 /* ViewModels */,
 				376AEC5B2F9F5FD700408171 /* Factories */,
@@ -158,6 +172,14 @@
 				36C5F0642850C9D1005EFC6C /* PostExamples.swift */,
 			);
 			path = Library;
+			sourceTree = "<group>";
+		};
+		374DC2112FBAF98600C362FF /* Multimedia */ = {
+			isa = PBXGroup;
+			children = (
+				37D31D942FBB0A32007E122A /* AudioPlayerViewController.swift */,
+			);
+			path = Multimedia;
 			sourceTree = "<group>";
 		};
 		376AEC552F9F5FAE00408171 /* Services */ = {
@@ -215,6 +237,18 @@
 				37A4D1512FB4428F00D4BEC2 /* ProfileCoordinator.swift */,
 			);
 			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		37E16ACA2FBB06E800DEEF6A /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				37D31DB42FBB3A8F007E122A /* Depeche Mode-Little 15.mp3 */,
+				37D31DAA2FBB0C48007E122A /* Depeche Mode-Behind The Wheel.mp3 */,
+				37D31DAB2FBB0C48007E122A /* Depeche Mode-Dangerous.mp3 */,
+				37D31DAC2FBB0C48007E122A /* Depeche Mode-Its No Good.mp3 */,
+				37D31DAE2FBB0C48007E122A /* Depeche Mode-Walking in My Shoes.mp3 */,
+			);
+			path = Audio;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -278,6 +312,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37D31DAF2FBB0C48007E122A /* Depeche Mode-Dangerous.mp3 in Resources */,
+				37D31DB02FBB0C48007E122A /* Depeche Mode-Its No Good.mp3 in Resources */,
+				37D31DB52FBB3A8F007E122A /* Depeche Mode-Little 15.mp3 in Resources */,
+				37D31DB12FBB0C48007E122A /* Depeche Mode-Behind The Wheel.mp3 in Resources */,
+				37D31DB32FBB0C48007E122A /* Depeche Mode-Walking in My Shoes.mp3 in Resources */,
 				3601A2B428490DDF000D261A /* LaunchScreen.storyboard in Resources */,
 				3601A2B128490DDF000D261A /* Assets.xcassets in Resources */,
 			);
@@ -292,6 +331,7 @@
 			files = (
 				36528E3F284FDF9100965BA4 /* PostTableViewCell.swift in Sources */,
 				3601A2BC28494D5D000D261A /* FeedViewController.swift in Sources */,
+				37D31D952FBB0A32007E122A /* AudioPlayerViewController.swift in Sources */,
 				3601A2BE28494E4F000D261A /* ProfileViewController.swift in Sources */,
 				3601A2A828490DDF000D261A /* AppDelegate.swift in Sources */,
 				379694CF2FAB102200218731 /* CustomButton.swift in Sources */,

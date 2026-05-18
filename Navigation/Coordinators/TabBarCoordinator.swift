@@ -31,6 +31,21 @@ class TabBarCoordinator: Coordinator {
         childCoordinators.append(profileCoordinator)
         profileNavController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle"), tag: 1)
         
-        tabBarController.viewControllers = [feedNavController, profileNavController]
+        // Photos
+        let photosVC = PhotosViewController()
+        let photosNavController = UINavigationController(rootViewController: photosVC)
+        photosNavController.tabBarItem = UITabBarItem(title: "Photos", image: UIImage(systemName: "photo.on.rectangle"), tag: 2)
+        
+        // Music (Аудиоплеер)
+        let audioVC = AudioPlayerViewController()
+        let audioNavController = UINavigationController(rootViewController: audioVC)
+        audioNavController.tabBarItem = UITabBarItem(title: "Music", image: UIImage(systemName: "music.note"), tag: 3)
+        
+        tabBarController.viewControllers = [
+            feedNavController,
+            profileNavController,
+            photosNavController,
+            audioNavController
+        ]
     }
 }
