@@ -1,53 +1,101 @@
-//
-//  FeedViewController.swift
-//  Navigation
-//
-
 import UIKit
 
 final class FeedViewController: UIViewController {
-
+    
+    weak var coordinator: FeedCoordinator?
+    
+    private let feedModel = FeedModel()
+    
+    private let guessTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Угадайте слово..."
+        textField.font = UIFont.systemFont(ofSize: 16)
+        textField.backgroundColor = .systemGray6
+        textField.layer.cornerRadius = 10
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.lightGray.cgColor
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        textField.leftViewMode = .always
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+    
+    private let checkGuessButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Проверить", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemBlue
+        button.layer.cornerRadius = 10
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let resultLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Введите слово и нажмите Проверить"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .systemTeal
+        view.backgroundColor = .white
+        title = "Feed"
         
-        createSubView()
+        setupViews()
+        setupConstraints()
+        setupActions()
     }
     
-    private func createSubView() {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.spacing = 10
-        stackView.distribution = .fillEqually
-        view.addSubview(stackView)
+    private func setupViews() {
+        view.addSubview(guessTextField)
+        view.addSubview(checkGuessButton)
+        view.addSubview(resultLabel)
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            stackView.heightAnchor.constraint(equalToConstant: 200),
-            stackView.widthAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.widthAnchor, constant: -32)
+            guessTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            guessTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
+            guessTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            guessTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            guessTextField.heightAnchor.constraint(equalToConstant: 50),
+            
+            checkGuessButton.topAnchor.constraint(equalTo: guessTextField.bottomAnchor, constant: 20),
+            checkGuessButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            checkGuessButton.widthAnchor.constraint(equalToConstant: 200),
+            checkGuessButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            resultLabel.topAnchor.constraint(equalTo: checkGuessButton.bottomAnchor, constant: 30),
+            resultLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            resultLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
-        addPostButton(title: "Post number One", color: .systemPurple, to: stackView, selector: #selector(tapPostButton))
-        addPostButton(title: "Post number Two", color: .systemIndigo, to: stackView, selector: #selector(tapPostButton))
     }
     
-    private func addPostButton(title: String, color: UIColor, to view: UIStackView, selector: Selector) {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(title, for: .normal)
-        button.backgroundColor = color
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = LayoutConstants.cornerRadius
-        button.addTarget(self, action: selector, for: .touchUpInside)
-        view.addArrangedSubview(button)
+    private func setupActions() {
+        checkGuessButton.addTarget(self, action: #selector(checkGuess), for: .touchUpInside)
     }
     
-    @objc func tapPostButton() {
-        let post = postExamples[0]
+    @objc private func checkGuess() {
+        guard let guess = guessTextField.text, !guess.isEmpty else {
+            resultLabel.text = "Пожалуйста, введите слово"
+            resultLabel.textColor = .red
+            return
+        }
         
-        let postVC = PostViewController()
-        postVC.post = post
-        navigationController?.pushViewController(postVC, animated: true)
+        let isCorrect = feedModel.check(word: guess)
+        
+        if isCorrect {
+            resultLabel.text = "✅ Верно! Загаданное слово: \(feedModel.secretWordForDisplay)"
+            resultLabel.textColor = .green
+        } else {
+            resultLabel.text = "❌ Неверно! Попробуйте ещё раз"
+            resultLabel.textColor = .red
+        }
+        
+        guessTextField.text = ""
     }
 }
