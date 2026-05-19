@@ -1,13 +1,10 @@
 import UIKit
-import AVFoundation
 
 class AudioPlayerViewController: UIViewController {
     
     // MARK: - Properties
-    private var audioPlayer: AVAudioPlayer?
-    private var isPlaying = false
+    private let audioService = AudioPlayerService()
     private var currentTrackIndex = 0
-    private var progressTimer: Timer?
     
     private let trackNames = [
         "Depeche Mode - Behind The Wheel",
@@ -113,9 +110,10 @@ class AudioPlayerViewController: UIViewController {
         view.backgroundColor = .white
         title = "Аудиоплеер"
         
+        audioService.delegate = self
+        
         setupUI()
         setupActions()
-        setupAudioSession()
         loadTrack(index: currentTrackIndex)
     }
     
@@ -170,96 +168,56 @@ class AudioPlayerViewController: UIViewController {
         progressSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
     }
     
-    private func setupAudioSession() {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            print("❌ Ошибка настройки аудиосессии: \(error)")
-            statusLabel.text = "Ошибка аудио"
-        }
-    }
-    
     private func loadTrack(index: Int) {
         guard index >= 0 && index < trackFiles.count else { return }
         currentTrackIndex = index
         trackNameLabel.text = trackNames[currentTrackIndex]
         
-        print("🟢 Ищем файл: \(trackFiles[currentTrackIndex]).mp3")
+        let wasPlaying = audioService.isPlaying
         
-        guard let url = Bundle.main.url(forResource: trackFiles[currentTrackIndex], withExtension: "mp3") else {
-            print("❌ Файл \(trackFiles[currentTrackIndex]).mp3 не найден")
-            statusLabel.text = "❌ Файл не найден"
-            return
-        }
+        let success = audioService.loadTrack(named: trackFiles[currentTrackIndex], withExtension: "mp3")
         
-        print("🟢 URL найден: \(url.path)")
-        
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.prepareToPlay()
-            audioPlayer?.delegate = self
-            progressSlider.value = 0
+        if success {
             statusLabel.text = "✅ Загружен: \(trackNames[currentTrackIndex])"
-            print("✅ Загружен трек: \(trackFiles[currentTrackIndex]).mp3")
-        } catch {
-            print("❌ Ошибка загрузки: \(error)")
+            progressSlider.value = 0
+            
+            // Если предыдущий трек играл, продолжаем воспроизведение
+            if wasPlaying {
+                audioService.play()
+                playPauseButton.setTitle("⏸️ Pause", for: .normal)
+                statusLabel.text = "Воспроизведение"
+            } else {
+                playPauseButton.setTitle("▶️ Play", for: .normal)
+                statusLabel.text = "Готов к воспроизведению"
+            }
+        } else {
             statusLabel.text = "❌ Ошибка загрузки"
         }
     }
     
-    // MARK: - Timer Methods
-    @objc private func updateProgress() {
-        guard let player = audioPlayer, player.isPlaying else { return }
-        let progress = Float(player.currentTime / player.duration)
-        progressSlider.value = progress
-    }
-    
-    private func startProgressTimer() {
-        stopProgressTimer()
-        progressTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateProgress), userInfo: nil, repeats: true)
-    }
-    
-    private func stopProgressTimer() {
-        progressTimer?.invalidate()
-        progressTimer = nil
-    }
-    
     // MARK: - Actions
     @objc private func playPauseTapped() {
-        guard let player = audioPlayer else {
-            statusLabel.text = "⚠️ Сначала выберите трек"
-            return
-        }
-        
-        if isPlaying {
-            player.pause()
+        if audioService.isPlaying {
+            audioService.pause()
             playPauseButton.setTitle("▶️ Play", for: .normal)
             statusLabel.text = "Пауза"
-            stopProgressTimer()
         } else {
-            player.play()
+            audioService.play()
             playPauseButton.setTitle("⏸️ Pause", for: .normal)
             statusLabel.text = "Воспроизведение"
-            startProgressTimer()
         }
-        isPlaying.toggle()
     }
     
     @objc private func stopTapped() {
-        audioPlayer?.stop()
-        audioPlayer?.currentTime = 0
-        isPlaying = false
+        audioService.stop()
         playPauseButton.setTitle("▶️ Play", for: .normal)
         statusLabel.text = "Остановлено"
-        stopProgressTimer()
         progressSlider.value = 0
     }
     
     @objc private func previousTapped() {
         let newIndex = currentTrackIndex - 1
         if newIndex >= 0 {
-            stopTapped()
             loadTrack(index: newIndex)
         } else {
             statusLabel.text = "Это первый трек"
@@ -269,7 +227,6 @@ class AudioPlayerViewController: UIViewController {
     @objc private func nextTapped() {
         let newIndex = currentTrackIndex + 1
         if newIndex < trackFiles.count {
-            stopTapped()
             loadTrack(index: newIndex)
         } else {
             statusLabel.text = "Это последний трек"
@@ -277,21 +234,19 @@ class AudioPlayerViewController: UIViewController {
     }
     
     @objc private func sliderValueChanged() {
-        guard let player = audioPlayer else { return }
-        let newTime = Double(progressSlider.value) * player.duration
-        player.currentTime = newTime
+        audioService.setProgress(progressSlider.value)
     }
 }
 
-// MARK: - AVAudioPlayerDelegate
-extension AudioPlayerViewController: AVAudioPlayerDelegate {
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        if flag {
-            stopProgressTimer()
-            progressSlider.value = 0
-            isPlaying = false
-            playPauseButton.setTitle("▶️ Play", for: .normal)
-            statusLabel.text = "Воспроизведение завершено"
-        }
+// MARK: - AudioPlayerServiceDelegate
+extension AudioPlayerViewController: AudioPlayerServiceDelegate {
+    func audioPlayerDidFinishPlaying() {
+        playPauseButton.setTitle("▶️ Play", for: .normal)
+        statusLabel.text = "Воспроизведение завершено"
+        progressSlider.value = 0
+    }
+    
+    func audioPlayerDidUpdateProgress(currentTime: TimeInterval, duration: TimeInterval) {
+        progressSlider.value = audioService.progress
     }
 }

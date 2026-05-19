@@ -3,8 +3,12 @@ import UIKit
 final class FeedViewController: UIViewController {
     
     weak var coordinator: FeedCoordinator?
-    
     private let feedModel = FeedModel()
+    
+    enum GuessWordError: Error {
+        case emptyWord
+        case incorrectWord
+    }
     
     private let guessTextField: UITextField = {
         let textField = UITextField()
@@ -79,20 +83,32 @@ final class FeedViewController: UIViewController {
         checkGuessButton.addTarget(self, action: #selector(checkGuess), for: .touchUpInside)
     }
     
-    @objc private func checkGuess() {
-        guard let guess = guessTextField.text, !guess.isEmpty else {
-            resultLabel.text = "Пожалуйста, введите слово"
-            resultLabel.textColor = .red
-            return
+    private func checkWordWithResult(word: String) -> Result<String, GuessWordError> {
+        if word.isEmpty {
+            return .failure(.emptyWord)
         }
+        if word.lowercased() != "swift" {
+            return .failure(.incorrectWord)
+        }
+        return .success("✅ Верно! Загаданное слово: Swift")
+    }
+    
+    @objc private func checkGuess() {
+        guard let guess = guessTextField.text else { return }
         
-        let isCorrect = feedModel.check(word: guess)
+        let result = checkWordWithResult(word: guess)
         
-        if isCorrect {
-            resultLabel.text = "✅ Верно! Загаданное слово: \(feedModel.secretWordForDisplay)"
+        switch result {
+        case .success(let message):
+            resultLabel.text = message
             resultLabel.textColor = .green
-        } else {
-            resultLabel.text = "❌ Неверно! Попробуйте ещё раз"
+        case .failure(let error):
+            switch error {
+            case .emptyWord:
+                resultLabel.text = "Пожалуйста, введите слово"
+            case .incorrectWord:
+                resultLabel.text = "❌ Неверно! Попробуйте ещё раз"
+            }
             resultLabel.textColor = .red
         }
         

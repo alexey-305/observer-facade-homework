@@ -276,23 +276,6 @@ class LoginViewController: UIViewController {
         tipLabel.text = tips.randomElement()
     }
     
-    // MARK: - Result Example (Задача 3)
-    private func loginWithResult(login: String, password: String) -> Result<Bool, AppError> {
-        if login.isEmpty {
-            return .failure(.invalidLogin)
-        }
-        if password.isEmpty {
-            return .failure(.invalidPassword)
-        }
-        if login != "1234" {
-            return .failure(.userNotFound)
-        }
-        if password != "0987" {
-            return .failure(.weakPassword("Пароль должен содержать хотя бы 4 символа"))
-        }
-        return .success(true)
-    }
-    
     // MARK: - Actions
     @objc private func loginButtonTapped() {
         print("🟢 loginButtonTapped, instanceId = \(instanceId), loginDelegate = \(loginDelegate != nil ? "установлен" : "НЕ установлен")")
@@ -303,17 +286,6 @@ class LoginViewController: UIViewController {
             return
         }
         
-        // Пример использования Result (Задача 3)
-        let result = loginWithResult(login: login, password: password)
-        switch result {
-        case .success:
-            print("✅ Успешный вход через Result")
-        case .failure(let error):
-            showAlert(message: error.localizedDescription)
-            return
-        }
-        
-        // Основная проверка с do-catch (Задача 2)
         guard let delegate = loginDelegate else {
             print("❌ loginDelegate не установлен")
             return
