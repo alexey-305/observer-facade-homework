@@ -3,12 +3,8 @@ import UIKit
 final class FeedViewController: UIViewController {
     
     weak var coordinator: FeedCoordinator?
-    private let feedModel = FeedModel()
     
-    enum GuessWordError: Error {
-        case emptyWord
-        case incorrectWord
-    }
+    private let secretWord = "Swift"
     
     private let guessTextField: UITextField = {
         let textField = UITextField()
@@ -20,6 +16,7 @@ final class FeedViewController: UIViewController {
         textField.layer.borderColor = UIColor.lightGray.cgColor
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         textField.leftViewMode = .always
+        textField.autocapitalizationType = .none
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -83,11 +80,16 @@ final class FeedViewController: UIViewController {
         checkGuessButton.addTarget(self, action: #selector(checkGuess), for: .touchUpInside)
     }
     
+    enum GuessWordError: Error {
+        case emptyWord
+        case incorrectWord
+    }
+    
     private func checkWordWithResult(word: String) -> Result<String, GuessWordError> {
         if word.isEmpty {
             return .failure(.emptyWord)
         }
-        if word.lowercased() != "swift" {
+        if word.lowercased() != secretWord.lowercased() {
             return .failure(.incorrectWord)
         }
         return .success("✅ Верно! Загаданное слово: Swift")

@@ -1,54 +1,125 @@
-//
-//  InfoViewController.swift
-//  Navigation
-//
-
 import UIKit
 
 final class InfoViewController: UIViewController {
-
+    
+    weak var coordinator: FeedCoordinator?
+    
+    // MARK: - Model
+    private let secretWord = "Swift"
+    
+    // MARK: - UI Elements
+    private let guessTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Угадайте слово..."
+        textField.font = UIFont.systemFont(ofSize: 16)
+        textField.backgroundColor = .systemGray6
+        textField.layer.cornerRadius = 10
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.lightGray.cgColor
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        textField.leftViewMode = .always
+        textField.autocapitalizationType = .none
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+    
+    private let checkGuessButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Проверить", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemBlue
+        button.layer.cornerRadius = 10
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let resultLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Введите слово и нажмите Проверить"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .systemGray6
+        view.backgroundColor = .white
+        title = "Feed"
         
-        createAlertButton()
+        setupViews()
+        setupConstraints()
+        setupActions()
     }
     
-    private func createAlertButton() {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Alert", for: .normal)
-        button.backgroundColor = .systemPink
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = LayoutConstants.cornerRadius
-        button.addTarget(self, action: #selector(tapAlertButton), for: .touchUpInside)
-                
-        view.addSubview(button)
-        
+    // MARK: - Setup
+    private func setupViews() {
+        view.addSubview(guessTextField)
+        view.addSubview(checkGuessButton)
+        view.addSubview(resultLabel)
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
-            button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            button.heightAnchor.constraint(equalToConstant: 50),
-            button.widthAnchor.constraint(equalToConstant: 100)
+            guessTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            guessTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
+            guessTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            guessTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            guessTextField.heightAnchor.constraint(equalToConstant: 50),
+            
+            checkGuessButton.topAnchor.constraint(equalTo: guessTextField.bottomAnchor, constant: 20),
+            checkGuessButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            checkGuessButton.widthAnchor.constraint(equalToConstant: 200),
+            checkGuessButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            resultLabel.topAnchor.constraint(equalTo: checkGuessButton.bottomAnchor, constant: 30),
+            resultLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            resultLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
     }
     
-    @objc func tapAlertButton() {
-        let alert = UIAlertController(title: "Attention",
-                                      message: "How are you feeling?",
-                                      preferredStyle: .alert)
-        // add two buttons
-        let fine = UIAlertAction(title: "Fine", style: .default) { _ in
-            print("Fine")
+    private func setupActions() {
+        checkGuessButton.addTarget(self, action: #selector(checkGuess), for: .touchUpInside)
+    }
+    
+    // MARK: - Result Pattern (Задача 3 из ошибок)
+    enum GuessWordError: Error {
+        case emptyWord
+        case incorrectWord
+    }
+    
+    private func checkWordWithResult(word: String) -> Result<String, GuessWordError> {
+        if word.isEmpty {
+            return .failure(.emptyWord)
         }
-        alert.addAction(fine)
+        if word.lowercased() != secretWord.lowercased() {
+            return .failure(.incorrectWord)
+        }
+        return .success("✅ Верно! Загаданное слово: Swift")
+    }
+    
+    // MARK: - Actions
+    @objc private func checkGuess() {
+        guard let guess = guessTextField.text else { return }
         
-        let so = UIAlertAction(title: "So-so", style: .destructive) { _ in
-            print("So-so")
+        let result = checkWordWithResult(word: guess)
+        
+        switch result {
+        case .success(let message):
+            resultLabel.text = message
+            resultLabel.textColor = .green
+        case .failure(let error):
+            switch error {
+            case .emptyWord:
+                resultLabel.text = "Пожалуйста, введите слово"
+            case .incorrectWord:
+                resultLabel.text = "❌ Неверно! Попробуйте ещё раз"
+            }
+            resultLabel.textColor = .red
         }
-        alert.addAction(so)
-
-        self.present(alert, animated: true, completion: nil)
+        
+        guessTextField.text = ""
     }
 }
