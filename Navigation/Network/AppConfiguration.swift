@@ -1,8 +1,8 @@
-//
-//  AppConfiguration.swift
-//  Navigation
-//
-//  Created by Алексей Кузнецов on 25.05.2026.
-//
-
 import Foundation
+
+enum AppConfiguration {
+
+    case people(String)
+    case starships(String)
+    case planets(String)
+}
