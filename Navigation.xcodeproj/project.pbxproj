@@ -36,6 +36,8 @@
 		37955C302FB09EFA00A7D935 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37955C2F2FB09EFA00A7D935 /* ProfileViewModel.swift */; };
 		379694CD2FAB0F9400218731 /* FeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379694CB2FAB0F9400218731 /* FeedModel.swift */; };
 		379694CF2FAB102200218731 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379694CE2FAB102200218731 /* CustomButton.swift */; };
+		37A3FFAB2FC6E4AF002BEE70 /* Planet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3FFAA2FC6E4AF002BEE70 /* Planet.swift */; };
+		37A3FFAD2FC6E6C0002BEE70 /* TodoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3FFAC2FC6E6BF002BEE70 /* TodoModel.swift */; };
 		37A4D14A2FB441A000D4BEC2 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D1492FB441A000D4BEC2 /* Coordinator.swift */; };
 		37A4D14C2FB441E700D4BEC2 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D14B2FB441E700D4BEC2 /* AppCoordinator.swift */; };
 		37A4D14E2FB4423800D4BEC2 /* TabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D14D2FB4423800D4BEC2 /* TabBarCoordinator.swift */; };
@@ -84,6 +86,8 @@
 		37955C2F2FB09EFA00A7D935 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		379694CB2FAB0F9400218731 /* FeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedModel.swift; sourceTree = "<group>"; };
 		379694CE2FAB102200218731 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		37A3FFAA2FC6E4AF002BEE70 /* Planet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Planet.swift; sourceTree = "<group>"; };
+		37A3FFAC2FC6E6BF002BEE70 /* TodoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoModel.swift; sourceTree = "<group>"; };
 		37A4D1492FB441A000D4BEC2 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		37A4D14B2FB441E700D4BEC2 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		37A4D14D2FB4423800D4BEC2 /* TabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarCoordinator.swift; sourceTree = "<group>"; };
@@ -149,6 +153,8 @@
 				3601A2B228490DDF000D261A /* LaunchScreen.storyboard */,
 				3601A2B528490DDF000D261A /* Info.plist */,
 				37818D4A2FAB0E2B0081E513 /* Views */,
+				37A3FFAA2FC6E4AF002BEE70 /* Planet.swift */,
+				37A3FFAC2FC6E6BF002BEE70 /* TodoModel.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -373,12 +379,14 @@
 				36C5F0612850B723005EFC6C /* PhotosViewController.swift in Sources */,
 				376AEC502F9F5ED700408171 /* SceneDelegate.swift in Sources */,
 				37A4D14C2FB441E700D4BEC2 /* AppCoordinator.swift in Sources */,
+				37A3FFAD2FC6E6C0002BEE70 /* TodoModel.swift in Sources */,
 				376AEC5C2F9F5FD700408171 /* LoginFactory.swift in Sources */,
 				37DB33F72FBC672B00CF70EE /* FeedViewController.swift in Sources */,
 				36528E39284F700900965BA4 /* ExtensionUIImage.swift in Sources */,
 				36C5F05C2850B1B1005EFC6C /* PhotosTableViewCell.swift in Sources */,
 				3601A2C42849E232000D261A /* InfoViewController.swift in Sources */,
 				36C5F0632850B7B6005EFC6C /* PhotosCollectionViewCell.swift in Sources */,
+				37A3FFAB2FC6E4AF002BEE70 /* Planet.swift in Sources */,
 				3601A2C228495DDF000D261A /* Post.swift in Sources */,
 				36528E3C284F725E00965BA4 /* LayoutConstants.swift in Sources */,
 				37A4D1582FB44DAA00D4BEC2 /* LoginInspector.swift in Sources */,
