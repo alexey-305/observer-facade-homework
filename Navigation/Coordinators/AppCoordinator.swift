@@ -2,21 +2,15 @@ import UIKit
 
 final class AppCoordinator {
 
-    private let window: UIWindow
-    private let factory: LoginFactory
+    private let navigationController: UINavigationController
+    private let factory = MyLoginFactory()
 
-    init(window: UIWindow, factory: LoginFactory) {
-        self.window = window
-        self.factory = factory
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
     }
 
     func start() {
-        let inspector = factory.makeLoginInspector()
-
-        let loginVC = LoginViewController(delegate: inspector)
-
-        let nav = UINavigationController(rootViewController: loginVC)
-        window.rootViewController = nav
-        window.makeKeyAndVisible()
+        let loginVC = factory.makeLoginViewController()
+        navigationController.viewControllers = [loginVC]
     }
 }
