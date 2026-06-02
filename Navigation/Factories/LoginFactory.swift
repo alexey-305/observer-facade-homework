@@ -1,11 +1,12 @@
-import Foundation
+import UIKit
 
 protocol LoginFactory {
-    func makeLoginInspector() -> LoginInspector
+    func makeLoginInspector() -> LoginViewControllerDelegate
 }
 
 struct MyLoginFactory: LoginFactory {
-    func makeLoginInspector() -> LoginInspector {
-        return LoginInspector()
+
+    func makeLoginInspector() -> LoginViewControllerDelegate {
+        LoginInspector()
     }
 }

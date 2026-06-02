@@ -1,34 +1,22 @@
 import UIKit
 
-class AppCoordinator: Coordinator {
-    
-    var childCoordinators: [Coordinator] = []
-    var navigationController: UINavigationController
-    
+final class AppCoordinator {
+
     private let window: UIWindow
-    
-    init(window: UIWindow) {
+    private let factory: LoginFactory
+
+    init(window: UIWindow, factory: LoginFactory) {
         self.window = window
-        self.navigationController = UINavigationController()
+        self.factory = factory
     }
-    
+
     func start() {
-        let loginVC = LoginViewController()
-        print("🟢 AppCoordinator создал экземпляр LoginViewController")
-        
-        let factory = MyLoginFactory()
         let inspector = factory.makeLoginInspector()
-        loginVC.setDelegate(inspector)
-        
-        loginVC.onLoginSuccess = { [weak self] in
-            print("🟢 Переход к TabBarCoordinator")
-            let tabBarCoordinator = TabBarCoordinator(navigationController: self!.navigationController)
-            self?.childCoordinators.append(tabBarCoordinator)
-            tabBarCoordinator.start()
-        }
-        
-        navigationController.setViewControllers([loginVC], animated: false)
-        window.rootViewController = navigationController
+
+        let loginVC = LoginViewController(delegate: inspector)
+
+        let nav = UINavigationController(rootViewController: loginVC)
+        window.rootViewController = nav
         window.makeKeyAndVisible()
     }
 }
