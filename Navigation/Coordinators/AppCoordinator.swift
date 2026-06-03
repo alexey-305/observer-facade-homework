@@ -1,34 +1,36 @@
 import UIKit
 
-class AppCoordinator: Coordinator {
+final class AppCoordinator {
     
-    var childCoordinators: [Coordinator] = []
-    var navigationController: UINavigationController
+    private let navigationController: UINavigationController
     
-    private let window: UIWindow
-    
-    init(window: UIWindow) {
-        self.window = window
-        self.navigationController = UINavigationController()
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
+        print("🟢 AppCoordinator инициализирован")
     }
     
     func start() {
+        print("🟢 AppCoordinator.start()")
+        showLogin()
+    }
+    
+    private func showLogin() {
+        print("🟢 Показываем LoginViewController")
         let loginVC = LoginViewController()
-        print("🟢 AppCoordinator создал экземпляр LoginViewController")
-        
-        let factory = MyLoginFactory()
-        let inspector = factory.makeLoginInspector()
-        loginVC.setDelegate(inspector)
         
         loginVC.onLoginSuccess = { [weak self] in
-            print("🟢 Переход к TabBarCoordinator")
-            let tabBarCoordinator = TabBarCoordinator(navigationController: self!.navigationController)
-            self?.childCoordinators.append(tabBarCoordinator)
-            tabBarCoordinator.start()
+            print("✅ onLoginSuccess вызван, переходим на главный экран")
+            self?.showMainFlow()
         }
         
         navigationController.setViewControllers([loginVC], animated: false)
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
+    }
+    
+    private func showMainFlow() {
+        print("🟢 Переход на главный экран")
+        let feedVC = FeedViewController()
+        feedVC.title = "Feed"
+        feedVC.view.backgroundColor = .white
+        navigationController.setViewControllers([feedVC], animated: true)
     }
 }

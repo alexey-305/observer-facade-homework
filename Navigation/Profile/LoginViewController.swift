@@ -1,24 +1,11 @@
 import UIKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
-    public let instanceId = UUID().uuidString
-    
     // MARK: - Properties
-    weak var loginDelegate: LoginViewControllerDelegate?
-    private var strongLoginDelegate: LoginViewControllerDelegate?
+    private var loginDelegate: LoginViewControllerDelegate?
     var onLoginSuccess: (() -> Void)?
-    
-    func setDelegate(_ delegate: LoginViewControllerDelegate) {
-        self.strongLoginDelegate = delegate
-        self.loginDelegate = delegate
-        print("🟢 setDelegate вызван, loginDelegate = \(loginDelegate != nil ? "установлен" : "НЕ установлен")")
-    }
-    
-    // MARK: - Timer Properties
-    private var timer: Timer?
-    private var secondsElapsed = 0
-    private let timerLimit = 30
     
     // MARK: - UI Elements
     private let scrollView: UIScrollView = {
@@ -43,7 +30,7 @@ class LoginViewController: UIViewController {
     
     private let loginTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Email or phone"
+        textField.placeholder = "Email"
         textField.font = UIFont.systemFont(ofSize: 16)
         textField.backgroundColor = .systemGray6
         textField.layer.cornerRadius = 10
@@ -53,6 +40,8 @@ class LoginViewController: UIViewController {
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         textField.leftViewMode = .always
         textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
+        textField.keyboardType = .emailAddress
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -94,59 +83,37 @@ class LoginViewController: UIViewController {
         button.layer.cornerRadius = 10
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.isEnabled = false
+        button.alpha = 0.5
         return button
-    }()
-    
-    // MARK: - Timer UI Elements
-    private let timerLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Время на экране: 0 сек"
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .gray
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let tipLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .systemOrange
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
     }()
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("🟢 viewDidLoad, instanceId = \(instanceId), loginDelegate = \(loginDelegate != nil ? "установлен" : "НЕ установлен")")
-        
+        print("🟢 viewDidLoad")
         view.backgroundColor = .white
-        title = "Login"
         
         setupViews()
         setupConstraints()
-        setupKeyboardObservers()
+        setupTextFields()
         setupButtonAction()
+        setupDelegate()
         setupTapGesture()
-        startTimer()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("🟢 viewWillAppear, instanceId = \(instanceId), loginDelegate = \(loginDelegate != nil ? "установлен" : "НЕ установлен")")
         navigationController?.navigationBar.isHidden = true
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        navigationController?.navigationBar.isHidden = false
+    // MARK: - Setup
+    private func setupDelegate() {
+        let inspector = LoginInspector(viewController: self)
+        self.loginDelegate = inspector
+        print("🟢 Делегат установлен: \(inspector)")
     }
     
-    // MARK: - Setup
     private func setupViews() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -154,8 +121,6 @@ class LoginViewController: UIViewController {
         contentView.addSubview(logoImageView)
         contentView.addSubview(stackView)
         contentView.addSubview(loginButton)
-        contentView.addSubview(timerLabel)
-        contentView.addSubview(tipLabel)
         
         stackView.addArrangedSubview(loginTextField)
         stackView.addArrangedSubview(passwordTextField)
@@ -188,35 +153,18 @@ class LoginViewController: UIViewController {
             loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             loginButton.heightAnchor.constraint(equalToConstant: 50),
-            
-            timerLabel.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 30),
-            timerLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            timerLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
-            tipLabel.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 12),
-            tipLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            tipLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            tipLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -20)
+            loginButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
     
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillHide),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
+    private func setupTextFields() {
+        loginTextField.addTarget(self, action: #selector(textFieldsChanged), for: .editingChanged)
+        passwordTextField.addTarget(self, action: #selector(textFieldsChanged), for: .editingChanged)
     }
     
     private func setupButtonAction() {
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        print("🟢 Кнопке назначен метод loginButtonTapped")
     }
     
     private func setupTapGesture() {
@@ -224,94 +172,86 @@ class LoginViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
     }
     
-    // MARK: - Keyboard Handling
-    @objc private func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            scrollView.contentInset.bottom = keyboardSize.height
-            scrollView.verticalScrollIndicatorInsets.bottom = keyboardSize.height
-        }
-    }
-    
-    @objc private func keyboardWillHide(notification: NSNotification) {
-        scrollView.contentInset.bottom = 0
-        scrollView.verticalScrollIndicatorInsets.bottom = 0
+    // MARK: - Actions
+    @objc private func textFieldsChanged() {
+        let isEmailFilled = !(loginTextField.text?.isEmpty ?? true)
+        let isPasswordFilled = !(passwordTextField.text?.isEmpty ?? true)
+        
+        loginButton.isEnabled = isEmailFilled && isPasswordFilled
+        loginButton.alpha = loginButton.isEnabled ? 1.0 : 0.5
     }
     
     @objc private func hideKeyboard() {
         view.endEditing(true)
     }
     
-    // MARK: - Timer Methods
-    private func startTimer() {
-        stopTimer()
-        secondsElapsed = 0
-        timerLabel.text = "Время на экране: 0 сек"
-        tipLabel.text = ""
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-    }
-    
-    private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
-    }
-    
-    @objc private func updateTimer() {
-        secondsElapsed += 1
-        timerLabel.text = "Время на экране: \(secondsElapsed) сек"
-        
-        if secondsElapsed >= timerLimit {
-            stopTimer()
-            showTip()
-        }
-    }
-    
-    private func showTip() {
-        let tips = [
-            "👀 Может, пора войти?",
-            "⏰ Вы здесь уже 30 секунд!",
-            "💡 Введите логин 1234 и пароль 0987",
-            "🔐 Попробуйте войти в приложение",
-            "🎯 Ваша цель — войти в профиль"
-        ]
-        tipLabel.text = tips.randomElement()
-    }
-    
-    // MARK: - Actions
     @objc private func loginButtonTapped() {
-        print("🟢 loginButtonTapped, instanceId = \(instanceId), loginDelegate = \(loginDelegate != nil ? "установлен" : "НЕ установлен")")
+        print("🔵🔵🔵 КНОПКА НАЖАТА! 🔵🔵🔵")
         
-        guard let login = loginTextField.text, !login.isEmpty,
+        guard let email = loginTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
-            showAlert(message: "Please enter both login and password")
+            print("❌ Поля пустые")
+            showError("Пожалуйста, заполните все поля")
             return
         }
         
-        guard let delegate = loginDelegate else {
-            print("❌ loginDelegate не установлен")
+        print("📧 Email: \(email)")
+        print("🔒 Password: \(password)")
+        
+        guard email.contains("@") else {
+            print("❌ Неверный формат email")
+            showError("Введите корректный email")
             return
         }
         
-        do {
-            let isSuccess = try delegate.check(login: login, password: password)
-            if isSuccess {
-                stopTimer()
-                print("✅ Успешный вход")
-                onLoginSuccess?()
+        guard password.count >= 6 else {
+            print("❌ Пароль слишком короткий")
+            showError("Пароль должен быть не менее 6 символов")
+            return
+        }
+        
+        loginButton.isEnabled = false
+        loginButton.setTitle("Загрузка...", for: .normal)
+        
+        print("🟢 loginDelegate = \(loginDelegate != nil ? "НЕ nil" : "nil")")
+        
+        print("🟢 Вызываем loginDelegate?.checkCredentials")
+        loginDelegate?.checkCredentials(email: email, password: password)
+        
+        if loginDelegate == nil {
+            print("⚠️ Делегат nil! Вызываем Firebase напрямую")
+            Auth.auth().signIn(withEmail: email, password: password) { result, error in
+                print("📡 Прямой вызов Firebase завершён")
+                if let error = error {
+                    print("❌ Ошибка: \(error)")
+                } else {
+                    print("✅ Успех!")
+                    self.onLoginSuccess?()
+                }
             }
-        } catch let error as AppError {
-            showAlert(message: error.localizedDescription)
-        } catch {
-            showAlert(message: "Неизвестная ошибка: \(error.localizedDescription)")
         }
     }
     
-    private func showAlert(message: String) {
-        let alert = UIAlertController(
-            title: "Ошибка",
-            message: message,
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
+    // MARK: - Firebase Response
+    func loginSuccess() {
+        DispatchQueue.main.async {
+            print("✅✅✅ loginSuccess вызван! ✅✅✅")
+            self.loginButton.isEnabled = true
+            self.loginButton.setTitle("Log In", for: .normal)
+            self.onLoginSuccess?()
+        }
+    }
+    
+    func showError(_ message: String) {
+        DispatchQueue.main.async {
+            print("❌ showError: \(message)")
+            self.loginButton.isEnabled = true
+            self.loginButton.setTitle("Log In", for: .normal)
+            self.loginButton.alpha = 1.0
+            
+            let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(alert, animated: true)
+        }
     }
 }
