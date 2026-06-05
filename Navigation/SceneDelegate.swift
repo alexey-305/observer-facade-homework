@@ -1,30 +1,38 @@
+
 import UIKit
-import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var coordinator: AppCoordinator?
 
-    func scene(_ scene: UIScene,
-               willConnectTo session: UISceneSession,
-               options connectionOptions: UIScene.ConnectionOptions) {
-
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        window = UIWindow(windowScene: windowScene)
+        
+        let galleryVC = GalleryViewController()
+        let navigationController = UINavigationController(rootViewController: galleryVC)
+        
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
+    }
 
-        let window = UIWindow(windowScene: windowScene)
-        self.window = window
+    func sceneDidDisconnect(_ scene: UIScene) {
 
-        let navigationController = UINavigationController()
-        coordinator = AppCoordinator(navigationController: navigationController)
-        coordinator?.start()
+    }
 
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
+    func sceneDidBecomeActive(_ scene: UIScene) {
+
+    }
+
+    func sceneWillResignActive(_ scene: UIScene) {
+
     }
     
-    func sceneDidDisconnect(_ scene: UIScene) {
-        try? Auth.auth().signOut()
-        print("👋 Сцена отключена, пользователь разлогинен")
+    func sceneWillEnterForeground(_ scene: UIScene) {
+    }
+
+    func sceneDidEnterBackground(_ scene: UIScene) {
+
     }
 }

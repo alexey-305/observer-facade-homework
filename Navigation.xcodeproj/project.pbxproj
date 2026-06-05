@@ -46,6 +46,8 @@
 		37A4D1502FB4426400D4BEC2 /* FeedCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D14F2FB4426400D4BEC2 /* FeedCoordinator.swift */; };
 		37A4D1522FB4428F00D4BEC2 /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D1512FB4428F00D4BEC2 /* ProfileCoordinator.swift */; };
 		37A4D1582FB44DAA00D4BEC2 /* LoginInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D1572FB44DAA00D4BEC2 /* LoginInspector.swift */; };
+		37BFD1532FD2A92A00E8EBE5 /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BFD1522FD2A92A00E8EBE5 /* GalleryViewController.swift */; };
+		37BFD1552FD2A9F000E8EBE5 /* ImagePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BFD1542FD2A9F000E8EBE5 /* ImagePreviewViewController.swift */; };
 		37C8E0CF2FC430FF003190DF /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C8E0CE2FC430FF003190DF /* NetworkService.swift */; };
 		37C8E0D12FC4310D003190DF /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C8E0D02FC4310D003190DF /* AppConfiguration.swift */; };
 		37D31D952FBB0A32007E122A /* AudioPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D31D942FBB0A32007E122A /* AudioPlayerViewController.swift */; };
@@ -98,6 +100,8 @@
 		37A4D14F2FB4426400D4BEC2 /* FeedCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCoordinator.swift; sourceTree = "<group>"; };
 		37A4D1512FB4428F00D4BEC2 /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		37A4D1572FB44DAA00D4BEC2 /* LoginInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInspector.swift; sourceTree = "<group>"; };
+		37BFD1522FD2A92A00E8EBE5 /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
+		37BFD1542FD2A9F000E8EBE5 /* ImagePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewViewController.swift; sourceTree = "<group>"; };
 		37C8E0CE2FC430FF003190DF /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		37C8E0D02FC4310D003190DF /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
 		37D31D942FBB0A32007E122A /* AudioPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerViewController.swift; sourceTree = "<group>"; };
@@ -145,6 +149,7 @@
 		3601A2A628490DDF000D261A /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				37BFD1512FD2A91B00E8EBE5 /* Gallery */,
 				37A3FCA42FD026B5008D5841 /* GoogleService-Info.plist */,
 				37C8E0CD2FC430E8003190DF /* Network */,
 				37E16ACA2FBB06E800DEEF6A /* Audio */,
@@ -181,6 +186,7 @@
 				3601A2C128495DDF000D261A /* Post.swift */,
 				36C5F0602850B723005EFC6C /* PhotosViewController.swift */,
 				36C5F0622850B7B6005EFC6C /* PhotosCollectionViewCell.swift */,
+				37BFD1542FD2A9F000E8EBE5 /* ImagePreviewViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -261,6 +267,14 @@
 				37A4D1512FB4428F00D4BEC2 /* ProfileCoordinator.swift */,
 			);
 			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		37BFD1512FD2A91B00E8EBE5 /* Gallery */ = {
+			isa = PBXGroup;
+			children = (
+				37BFD1522FD2A92A00E8EBE5 /* GalleryViewController.swift */,
+			);
+			path = Gallery;
 			sourceTree = "<group>";
 		};
 		37C8E0CD2FC430E8003190DF /* Network */ = {
@@ -386,9 +400,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Navigation/Pods-Navigation-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Navigation/Pods-Navigation-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -438,10 +456,12 @@
 				37A4D1522FB4428F00D4BEC2 /* ProfileCoordinator.swift in Sources */,
 				37A4D14A2FB441A000D4BEC2 /* Coordinator.swift in Sources */,
 				37A4D1502FB4426400D4BEC2 /* FeedCoordinator.swift in Sources */,
+				37BFD1552FD2A9F000E8EBE5 /* ImagePreviewViewController.swift in Sources */,
 				379694CD2FAB0F9400218731 /* FeedModel.swift in Sources */,
 				37955C302FB09EFA00A7D935 /* ProfileViewModel.swift in Sources */,
 				376AEC572F9F5FAE00408171 /* TestUserService.swift in Sources */,
 				37C8E0D12FC4310D003190DF /* AppConfiguration.swift in Sources */,
+				37BFD1532FD2A92A00E8EBE5 /* GalleryViewController.swift in Sources */,
 				376AEC592F9F5FAE00408171 /* Checker.swift in Sources */,
 				36C5F05E2850B4A6005EFC6C /* PhotoExamples.swift in Sources */,
 				37C8E0CF2FC430FF003190DF /* NetworkService.swift in Sources */,
