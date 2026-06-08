@@ -26,6 +26,7 @@
 		36C5F0612850B723005EFC6C /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C5F0602850B723005EFC6C /* PhotosViewController.swift */; };
 		36C5F0632850B7B6005EFC6C /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C5F0622850B7B6005EFC6C /* PhotosCollectionViewCell.swift */; };
 		36C5F0652850C9D1005EFC6C /* PostExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C5F0642850C9D1005EFC6C /* PostExamples.swift */; };
+		37057B6D2FD68B8A00F154C8 /* ApplicationAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37057B6C2FD68B8A00F154C8 /* ApplicationAssembly.swift */; };
 		374DC20E2FBAF6C000C362FF /* AppErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374DC20D2FBAF6C000C362FF /* AppErrors.swift */; };
 		3760243F2FBC5C5B0084A9CF /* AudioPlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3760243E2FBC5C5B0084A9CF /* AudioPlayerService.swift */; };
 		376AEC502F9F5ED700408171 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376AEC4F2F9F5ED700408171 /* SceneDelegate.swift */; };
@@ -81,6 +82,7 @@
 		36C5F0602850B723005EFC6C /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		36C5F0622850B7B6005EFC6C /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
 		36C5F0642850C9D1005EFC6C /* PostExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostExamples.swift; sourceTree = "<group>"; };
+		37057B6C2FD68B8A00F154C8 /* ApplicationAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationAssembly.swift; sourceTree = "<group>"; };
 		374DC20D2FBAF6C000C362FF /* AppErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppErrors.swift; sourceTree = "<group>"; };
 		3760243E2FBC5C5B0084A9CF /* AudioPlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerService.swift; sourceTree = "<group>"; };
 		376AEC4F2F9F5ED700408171 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 				37A4D1572FB44DAA00D4BEC2 /* LoginInspector.swift */,
 				374DC20D2FBAF6C000C362FF /* AppErrors.swift */,
 				37A3FCA02FD0205F008D5841 /* CheckerService.swift */,
+				37057B6C2FD68B8A00F154C8 /* ApplicationAssembly.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -460,6 +463,7 @@
 				379694CD2FAB0F9400218731 /* FeedModel.swift in Sources */,
 				37955C302FB09EFA00A7D935 /* ProfileViewModel.swift in Sources */,
 				376AEC572F9F5FAE00408171 /* TestUserService.swift in Sources */,
+				37057B6D2FD68B8A00F154C8 /* ApplicationAssembly.swift in Sources */,
 				37C8E0D12FC4310D003190DF /* AppConfiguration.swift in Sources */,
 				37BFD1532FD2A92A00E8EBE5 /* GalleryViewController.swift in Sources */,
 				376AEC592F9F5FAE00408171 /* Checker.swift in Sources */,

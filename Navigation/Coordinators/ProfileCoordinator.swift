@@ -1,8 +1,8 @@
 import UIKit
+import FirebaseAuth
 
-class ProfileCoordinator: Coordinator {
+final class ProfileCoordinator: Coordinator {
     
-    var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     
     init(navigationController: UINavigationController) {
@@ -10,14 +10,9 @@ class ProfileCoordinator: Coordinator {
     }
     
     func start() {
-        let profileVC = ProfileViewController()
-        profileVC.coordinator = self
-        navigationController.setViewControllers([profileVC], animated: false)
-    }
-    
-    func showPostDetails(_ post: Post) {
-        let postVC = PostViewController()
-        postVC.post = post
-        navigationController.pushViewController(postVC, animated: true)
+        let email = Auth.auth().currentUser?.email
+        let profileVC = ProfileViewController(email: email)
+        profileVC.title = "Профиль"
+        navigationController.pushViewController(profileVC, animated: true)
     }
 }

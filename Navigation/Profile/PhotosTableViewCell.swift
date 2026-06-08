@@ -1,8 +1,3 @@
-//
-//  PhotosTableViewCell.swift
-//  Navigation
-//
-
 import UIKit
 
 class PhotosTableViewCell: UITableViewCell {

@@ -1,8 +1,9 @@
+import Foundation
 import UIKit
 
-final class LoginFactory {
+class ApplicationAssembly {
     
-    func makeViewController() -> LoginViewController {
+    func makeLoginViewController() -> LoginViewController {
         let checkerService = CheckerService()
         let loginInspector = LoginInspector(checkerService: checkerService)
         let loginVC = LoginViewController(delegate: loginInspector)

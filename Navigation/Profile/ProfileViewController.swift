@@ -1,96 +1,114 @@
 import UIKit
+import FirebaseAuth
 
-final class ProfileViewController: UIViewController {
+class ProfileViewController: UIViewController {
     
-    weak var coordinator: ProfileCoordinator?
+    private let email: String?
     
-    private let tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
+    private let avatarImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.image = UIImage(systemName: "person.circle.fill")
+        iv.tintColor = .systemGray
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        return iv
     }()
     
-    private var posts: [Post] = [
-        Post(author: "cat_lover_2024", description: "Сегодня мой кот поймал солнечного зайчика! 🐱☀️", image: "1", likes: 120, views: 456),
-        Post(author: "hipster_cat", description: "Новый диван - новое место для сна.", image: "2", likes: 89, views: 234),
-        Post(author: "crazy_cat_lady", description: "Купила новую игрушку, а кот играет с коробкой.", image: "3", likes: 256, views: 789),
-        Post(author: "philosopher_cat", description: "Зачем люди ходят на работу?", image: "4", likes: 445, views: 1234)
-    ]
+    private let emailLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.textColor = .label
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
-    private let testUser = User(
-        login: "1234",
-        fullName: "Hipster Cat",
-        avatar: UIImage(named: "avatar") ?? UIImage(),
-        status: "Waiting for something..."
-    )
+    private let logoutButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Выйти", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemRed
+        button.layer.cornerRadius = 12
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    init(email: String?) {
+        self.email = email
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        title = "Profile"
-        
-        setupTableView()
-        setupConstraints()
-        
-        tableView.estimatedRowHeight = 400
-        tableView.rowHeight = UITableView.automaticDimension
+        setupUI()
+        setupData()
     }
     
-    private func setupTableView() {
-        view.addSubview(tableView)
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(PostTableViewCell.self, forCellReuseIdentifier: "PostCell")
-        tableView.separatorStyle = .none
-    }
-    
-    private func setupConstraints() {
+    private func setupUI() {
+        title = "Профиль"
+        view.backgroundColor = .systemBackground
+        
+        view.addSubview(avatarImageView)
+        view.addSubview(emailLabel)
+        view.addSubview(logoutButton)
+        
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            avatarImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            avatarImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 100),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 100),
+            
+            emailLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 20),
+            emailLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            logoutButton.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 40),
+            logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            logoutButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-    }
-}
-
-// MARK: - UITableViewDataSource
-extension ProfileViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        
+        avatarImageView.layer.cornerRadius = 50
+        
+        logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return posts.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as? PostTableViewCell else {
-            return UITableViewCell()
+    private func setupData() {
+        if let userEmail = email {
+            emailLabel.text = userEmail
+        } else if let currentUser = Auth.auth().currentUser?.email {
+            emailLabel.text = currentUser
+        } else {
+            emailLabel.text = "Email не указан"
         }
-        cell.configPostArray(post: posts[indexPath.row])
-        return cell
-    }
-}
-
-// MARK: - UITableViewDelegate
-extension ProfileViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = ProfileHeaderView()
-        header.configure(with: testUser)
-        return header
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 220
+    @objc private func logoutTapped() {
+        let alert = UIAlertController(title: "Выход", message: "Вы уверены, что хотите выйти?", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Выйти", style: .destructive) { _ in
+            do {
+                try Auth.auth().signOut()
+                UserDefaults.standard.removeObject(forKey: "currentUserEmail")
+                
+                if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                    sceneDelegate.showLoginScreen()
+                }
+            } catch {
+                self.showError(error.localizedDescription)
+            }
+        })
+        
+        present(alert, animated: true)
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        coordinator?.showPostDetails(posts[indexPath.row])
+    private func showError(_ message: String) {
+        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
