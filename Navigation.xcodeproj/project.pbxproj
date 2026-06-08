@@ -37,6 +37,10 @@
 		37955C302FB09EFA00A7D935 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37955C2F2FB09EFA00A7D935 /* ProfileViewModel.swift */; };
 		379694CD2FAB0F9400218731 /* FeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379694CB2FAB0F9400218731 /* FeedModel.swift */; };
 		379694CF2FAB102200218731 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379694CE2FAB102200218731 /* CustomButton.swift */; };
+		379B753C2FD69474000FED9F /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 379B753B2FD69474000FED9F /* KeychainAccess */; };
+		379B753E2FD69566000FED9F /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379B753D2FD69566000FED9F /* PasswordViewController.swift */; };
+		379B75402FD6959E000FED9F /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379B753F2FD6959E000FED9F /* MainTabBarController.swift */; };
+		379B75422FD695B2000FED9F /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379B75412FD695B2000FED9F /* SettingsViewController.swift */; };
 		37A3FCA12FD0205F008D5841 /* CheckerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3FCA02FD0205F008D5841 /* CheckerService.swift */; };
 		37A3FCA52FD026B5008D5841 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 37A3FCA42FD026B5008D5841 /* GoogleService-Info.plist */; };
 		37A3FFAB2FC6E4AF002BEE70 /* Planet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3FFAA2FC6E4AF002BEE70 /* Planet.swift */; };
@@ -92,6 +96,9 @@
 		37955C2F2FB09EFA00A7D935 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		379694CB2FAB0F9400218731 /* FeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedModel.swift; sourceTree = "<group>"; };
 		379694CE2FAB102200218731 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		379B753D2FD69566000FED9F /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
+		379B753F2FD6959E000FED9F /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		379B75412FD695B2000FED9F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		37A3FCA02FD0205F008D5841 /* CheckerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckerService.swift; sourceTree = "<group>"; };
 		37A3FCA42FD026B5008D5841 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		37A3FFAA2FC6E4AF002BEE70 /* Planet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Planet.swift; sourceTree = "<group>"; };
@@ -124,6 +131,7 @@
 			files = (
 				3786A63C2F9F5C23001199E3 /* iOSIntPackage in Frameworks */,
 				26B120472C78A3C84306554A /* Pods_Navigation.framework in Frameworks */,
+				379B753C2FD69474000FED9F /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,6 +159,9 @@
 		3601A2A628490DDF000D261A /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				379B75412FD695B2000FED9F /* SettingsViewController.swift */,
+				379B753F2FD6959E000FED9F /* MainTabBarController.swift */,
+				379B753D2FD69566000FED9F /* PasswordViewController.swift */,
 				37BFD1512FD2A91B00E8EBE5 /* Gallery */,
 				37A3FCA42FD026B5008D5841 /* GoogleService-Info.plist */,
 				37C8E0CD2FC430E8003190DF /* Network */,
@@ -366,6 +377,7 @@
 			mainGroup = 3601A29B28490DDF000D261A;
 			packageReferences = (
 				3786A63A2F9F5C23001199E3 /* XCRemoteSwiftPackageReference "iOSIntPackage" */,
+				379B753A2FD69474000FED9F /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = 3601A2A528490DDF000D261A /* Products */;
 			projectDirPath = "";
@@ -462,6 +474,8 @@
 				37BFD1552FD2A9F000E8EBE5 /* ImagePreviewViewController.swift in Sources */,
 				379694CD2FAB0F9400218731 /* FeedModel.swift in Sources */,
 				37955C302FB09EFA00A7D935 /* ProfileViewModel.swift in Sources */,
+				379B753E2FD69566000FED9F /* PasswordViewController.swift in Sources */,
+				379B75402FD6959E000FED9F /* MainTabBarController.swift in Sources */,
 				376AEC572F9F5FAE00408171 /* TestUserService.swift in Sources */,
 				37057B6D2FD68B8A00F154C8 /* ApplicationAssembly.swift in Sources */,
 				37C8E0D12FC4310D003190DF /* AppConfiguration.swift in Sources */,
@@ -478,6 +492,7 @@
 				37A3FFAD2FC6E6C0002BEE70 /* TodoModel.swift in Sources */,
 				376AEC5C2F9F5FD700408171 /* LoginFactory.swift in Sources */,
 				37DB33F72FBC672B00CF70EE /* FeedViewController.swift in Sources */,
+				379B75422FD695B2000FED9F /* SettingsViewController.swift in Sources */,
 				36528E39284F700900965BA4 /* ExtensionUIImage.swift in Sources */,
 				36C5F05C2850B1B1005EFC6C /* PhotosTableViewCell.swift in Sources */,
 				3601A2C42849E232000D261A /* InfoViewController.swift in Sources */,
@@ -717,6 +732,14 @@
 				kind = branch;
 			};
 		};
+		379B753A2FD69474000FED9F /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -724,6 +747,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3786A63A2F9F5C23001199E3 /* XCRemoteSwiftPackageReference "iOSIntPackage" */;
 			productName = iOSIntPackage;
+		};
+		379B753B2FD69474000FED9F /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 379B753A2FD69474000FED9F /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

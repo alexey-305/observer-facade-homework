@@ -1,31 +1,26 @@
 import UIKit
-import FirebaseAuth
+import KeychainAccess
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var appCoordinator: AppCoordinator?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        
+
         window = UIWindow(windowScene: windowScene)
-        
-        let navigationController = UINavigationController()
-        appCoordinator = AppCoordinator(navigationController: navigationController)
-        appCoordinator?.start()
-        
-        window?.rootViewController = navigationController
+
+        let keychain = Keychain(service: "com.navigation.app.password")
+        let hasPassword = (try? keychain.get("userPassword")) != nil
+
+        let passwordVC = PasswordViewController(hasPassword: hasPassword)
+        window?.rootViewController = passwordVC
         window?.makeKeyAndVisible()
     }
-    
+
     func showMainScreen() {
-        print("✅ SceneDelegate.showMainScreen() вызван")
-        appCoordinator?.showMainFlow()
-    }
-    
-    func showLoginScreen() {
-        print("✅ SceneDelegate.showLoginScreen() вызван")
-        appCoordinator?.showLogin()
+        let tabBarController = MainTabBarController()
+        tabBarController.modalPresentationStyle = .fullScreen
+        window?.rootViewController = tabBarController
     }
 }

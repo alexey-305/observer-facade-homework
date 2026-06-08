@@ -1,5 +1,12 @@
 platform :ios, '13.0'
 
+target 'Navigation' do
+  use_frameworks!
+  
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+end
+
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
@@ -7,11 +14,4 @@ post_install do |installer|
       config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = 'YES'
     end
   end
-end
-
-target 'Navigation' do
-  use_frameworks!
-  
-  pod 'Firebase/Core'
-  pod 'Firebase/Auth'
 end

@@ -1,8 +1,3 @@
-//
-//  LoginViewController.swift
-//  Navigation
-//
-
 import UIKit
 
 class LoginViewController: UIViewController {
