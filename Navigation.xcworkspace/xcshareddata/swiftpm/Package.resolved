@@ -1,0 +1,24 @@
+{
+  "originHash" : "aee85ca4f629f66a9815dc3d8c0cad82edda3ea76098e0295c7b423bc87dd2a8",
+  "pins" : [
+    {
+      "identity" : "iosintpackage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/TrueMax/iOSIntPackage.git",
+      "state" : {
+        "branch" : "imagepublisher",
+        "revision" : "e1cc0e1b76d7cb8f770d903d85ae9ed91ae026bd"
+      }
+    },
+    {
+      "identity" : "keychainaccess",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kishikawakatsumi/KeychainAccess.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e0c7eebc5a4465a3c4680764f26b7a61f567cdaf"
+      }
+    }
+  ],
+  "version" : 3
+}
