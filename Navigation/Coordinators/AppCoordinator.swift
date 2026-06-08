@@ -4,6 +4,7 @@ import FirebaseAuth
 final class AppCoordinator {
     
     private let navigationController: UINavigationController
+    private var loginInspector: LoginInspector?  // Сохраняем инспектор
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -24,9 +25,10 @@ final class AppCoordinator {
         print("🟢 Показываем LoginViewController")
         
         let checkerService = CheckerService()
-        let loginInspector = LoginInspector(checkerService: checkerService)
-        let loginVC = LoginViewController(delegate: loginInspector)
-        loginInspector.viewController = loginVC
+        let inspector = LoginInspector(checkerService: checkerService)
+        self.loginInspector = inspector  // Сильная ссылка
+        let loginVC = LoginViewController(delegate: inspector)
+        inspector.viewController = loginVC
         
         navigationController.setViewControllers([loginVC], animated: false)
     }
