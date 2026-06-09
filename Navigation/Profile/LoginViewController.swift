@@ -184,7 +184,7 @@ class LoginViewController: UIViewController {
         loginButton.isEnabled = true
         
         if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
-            sceneDelegate.showMainScreen()
+            sceneDelegate.showPasswordCreationScreen()
         }
     }
 }

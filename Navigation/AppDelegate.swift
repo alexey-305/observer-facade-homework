@@ -1,19 +1,19 @@
 import UIKit
 import FirebaseCore
-import FirebaseAuth
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        // Временно отключаем Analytics
-        let filePath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
-        let options = FirebaseOptions(contentsOfFile: filePath)!
-        FirebaseApp.configure(options: options)
-        
-        print("🔥 Firebase сконфигурирован!")
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
+        print("🔥 Firebase настроен успешно!")
         return true
+    }
+    
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
     }
 }

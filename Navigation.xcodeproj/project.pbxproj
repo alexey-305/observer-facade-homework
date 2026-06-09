@@ -34,6 +34,7 @@
 		376AEC592F9F5FAE00408171 /* Checker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376AEC512F9F5FAE00408171 /* Checker.swift */; };
 		376AEC5C2F9F5FD700408171 /* LoginFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376AEC5A2F9F5FD700408171 /* LoginFactory.swift */; };
 		3786A63C2F9F5C23001199E3 /* iOSIntPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 3786A63B2F9F5C23001199E3 /* iOSIntPackage */; };
+		3794504E2FD80F3D00FD024E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3794504D2FD80F3D00FD024E /* GoogleService-Info.plist */; };
 		37955C302FB09EFA00A7D935 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37955C2F2FB09EFA00A7D935 /* ProfileViewModel.swift */; };
 		379694CD2FAB0F9400218731 /* FeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379694CB2FAB0F9400218731 /* FeedModel.swift */; };
 		379694CF2FAB102200218731 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379694CE2FAB102200218731 /* CustomButton.swift */; };
@@ -42,7 +43,6 @@
 		379B75402FD6959E000FED9F /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379B753F2FD6959E000FED9F /* MainTabBarController.swift */; };
 		379B75422FD695B2000FED9F /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379B75412FD695B2000FED9F /* SettingsViewController.swift */; };
 		37A3FCA12FD0205F008D5841 /* CheckerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3FCA02FD0205F008D5841 /* CheckerService.swift */; };
-		37A3FCA52FD026B5008D5841 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 37A3FCA42FD026B5008D5841 /* GoogleService-Info.plist */; };
 		37A3FFAB2FC6E4AF002BEE70 /* Planet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3FFAA2FC6E4AF002BEE70 /* Planet.swift */; };
 		37A3FFAD2FC6E6C0002BEE70 /* TodoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A3FFAC2FC6E6BF002BEE70 /* TodoModel.swift */; };
 		37A4D14A2FB441A000D4BEC2 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D1492FB441A000D4BEC2 /* Coordinator.swift */; };
@@ -93,6 +93,7 @@
 		376AEC512F9F5FAE00408171 /* Checker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checker.swift; sourceTree = "<group>"; };
 		376AEC542F9F5FAE00408171 /* TestUserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUserService.swift; sourceTree = "<group>"; };
 		376AEC5A2F9F5FD700408171 /* LoginFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFactory.swift; sourceTree = "<group>"; };
+		3794504D2FD80F3D00FD024E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		37955C2F2FB09EFA00A7D935 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		379694CB2FAB0F9400218731 /* FeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedModel.swift; sourceTree = "<group>"; };
 		379694CE2FAB102200218731 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
@@ -100,7 +101,6 @@
 		379B753F2FD6959E000FED9F /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		379B75412FD695B2000FED9F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		37A3FCA02FD0205F008D5841 /* CheckerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckerService.swift; sourceTree = "<group>"; };
-		37A3FCA42FD026B5008D5841 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		37A3FFAA2FC6E4AF002BEE70 /* Planet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Planet.swift; sourceTree = "<group>"; };
 		37A3FFAC2FC6E6BF002BEE70 /* TodoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoModel.swift; sourceTree = "<group>"; };
 		37A4D1492FB441A000D4BEC2 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
@@ -141,6 +141,7 @@
 		3601A29B28490DDF000D261A = {
 			isa = PBXGroup;
 			children = (
+				3794504D2FD80F3D00FD024E /* GoogleService-Info.plist */,
 				3601A2A628490DDF000D261A /* Navigation */,
 				3601A2A528490DDF000D261A /* Products */,
 				DDB23EBB804AA647F674F8C1 /* Pods */,
@@ -163,7 +164,6 @@
 				379B753F2FD6959E000FED9F /* MainTabBarController.swift */,
 				379B753D2FD69566000FED9F /* PasswordViewController.swift */,
 				37BFD1512FD2A91B00E8EBE5 /* Gallery */,
-				37A3FCA42FD026B5008D5841 /* GoogleService-Info.plist */,
 				37C8E0CD2FC430E8003190DF /* Network */,
 				37E16ACA2FBB06E800DEEF6A /* Audio */,
 				374DC2112FBAF98600C362FF /* Multimedia */,
@@ -394,7 +394,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37D31DAF2FBB0C48007E122A /* Depeche Mode-Dangerous.mp3 in Resources */,
-				37A3FCA52FD026B5008D5841 /* GoogleService-Info.plist in Resources */,
+				3794504E2FD80F3D00FD024E /* GoogleService-Info.plist in Resources */,
 				37D31DB02FBB0C48007E122A /* Depeche Mode-Its No Good.mp3 in Resources */,
 				37D31DB52FBB3A8F007E122A /* Depeche Mode-Little 15.mp3 in Resources */,
 				37D31DB12FBB0C48007E122A /* Depeche Mode-Behind The Wheel.mp3 in Resources */,
@@ -647,9 +647,12 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JD7856287K;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Navigation/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Приложение сохраняет фотографии в Documents";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Приложению нужен доступ к галерее для выбора фотографий";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
@@ -660,7 +663,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.mtn.VKNavFirebase;
+				PRODUCT_BUNDLE_IDENTIFIER = "vknavfirebase-ba2b7";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -678,9 +681,12 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JD7856287K;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Navigation/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Приложение сохраняет фотографии в Documents";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Приложению нужен доступ к галерее для выбора фотографий";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
@@ -691,7 +697,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.mtn.VKNavFirebase;
+				PRODUCT_BUNDLE_IDENTIFIER = "vknavfirebase-ba2b7";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;

@@ -1,10 +1,11 @@
 import UIKit
 import FirebaseAuth
+import KeychainAccess
 
 final class AppCoordinator {
     
     private let navigationController: UINavigationController
-    private var loginInspector: LoginInspector?  // Сохраняем инспектор
+    private var loginInspector: LoginInspector?
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -14,8 +15,10 @@ final class AppCoordinator {
     func start() {
         print("🟢 AppCoordinator.start()")
         
+        print("DEBUG: currentUser = \(Auth.auth().currentUser?.email ?? "nil")")
+        
         if Auth.auth().currentUser != nil {
-            showMainFlow()
+            checkLocalPassword()
         } else {
             showLogin()
         }
@@ -26,30 +29,38 @@ final class AppCoordinator {
         
         let checkerService = CheckerService()
         let inspector = LoginInspector(checkerService: checkerService)
-        self.loginInspector = inspector  // Сильная ссылка
+        self.loginInspector = inspector
         let loginVC = LoginViewController(delegate: inspector)
         inspector.viewController = loginVC
         
         navigationController.setViewControllers([loginVC], animated: false)
     }
     
+    func checkLocalPassword() {
+        print("🟢 Проверяем локальный пароль")
+        
+        let keychain = Keychain(service: "com.navigation.app.password")
+        let hasPassword = (try? keychain.get("userPassword")) != nil
+        print("DEBUG: hasPassword = \(hasPassword)")
+        
+        let passwordVC = PasswordViewController(hasPassword: hasPassword)
+        passwordVC.modalPresentationStyle = .fullScreen
+        navigationController.present(passwordVC, animated: true)
+    }
+    
     func showMainFlow() {
         print("🟢 Переход на главный экран (TabBar)")
         
-        let tabBarController = UITabBarController()
-        
-        let feedVC = FeedViewController()
-        feedVC.title = "Лента"
-        let feedNav = UINavigationController(rootViewController: feedVC)
-        feedNav.tabBarItem = UITabBarItem(title: "Лента", image: UIImage(systemName: "house"), tag: 0)
-        
-        let email = Auth.auth().currentUser?.email
-        let profileVC = ProfileViewController(email: email)
-        profileVC.title = "Профиль"
-        let profileNav = UINavigationController(rootViewController: profileVC)
-        profileNav.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person"), tag: 1)
-        
-        tabBarController.viewControllers = [feedNav, profileNav]
+        navigationController.dismiss(animated: true)
+        let tabBarController = MainTabBarController()
         navigationController.setViewControllers([tabBarController], animated: true)
+    }
+    
+    func showPasswordCreationScreen() {
+        print("🟢 Показываем экран создания пароля после логина")
+        
+        let passwordVC = PasswordViewController(hasPassword: false)
+        passwordVC.modalPresentationStyle = .fullScreen
+        navigationController.present(passwordVC, animated: true)
     }
 }

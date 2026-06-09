@@ -189,8 +189,8 @@ class PasswordViewController: UIViewController {
     }
 
     private func showMainApp() {
-        let tabBarController = MainTabBarController()
-        tabBarController.modalPresentationStyle = .fullScreen
-        present(tabBarController, animated: true)
+        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+        let sceneDelegate = windowScene?.delegate as? SceneDelegate
+        sceneDelegate?.appCoordinator?.showMainFlow()
     }
 }
