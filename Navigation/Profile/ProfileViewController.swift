@@ -1,114 +1,118 @@
-//
-//  ProfileViewController.swift
-//  Navigation
-//
-
 import UIKit
+import FirebaseAuth
+import KeychainAccess
 
-final class ProfileViewController: UIViewController {
-    
-    static let headerIdent = "header"
-    static let photoIdent = "photo"
-    static let postIdent = "post"
-    
-    static var postTableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .grouped)
-        table.translatesAutoresizingMaskIntoConstraints = false
-        table.register(ProfileHeaderView.self, forHeaderFooterViewReuseIdentifier: headerIdent)
-        table.register(PhotosTableViewCell.self, forCellReuseIdentifier: photoIdent)
-        table.register(PostTableViewCell.self, forCellReuseIdentifier: postIdent)
-        return table
+class ProfileViewController: UIViewController {
+
+    private let email: String?
+
+    private let avatarImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.image = UIImage(systemName: "person.circle.fill")
+        iv.tintColor = .systemGray
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        return iv
     }()
-    
-    // MARK: - Setup section
-    
+
+    private let emailLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.textColor = .label
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private let logoutButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Выйти", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemRed
+        button.layer.cornerRadius = 12
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
+    init(email: String?) {
+        self.email = email
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+        setupData()
+    }
 
+    private func setupUI() {
+        title = "Профиль"
         view.backgroundColor = .systemBackground
-        
-        view.addSubview(Self.postTableView)
-        setupConstraints()
-        Self.postTableView.dataSource = self
-        Self.postTableView.delegate = self
-        Self.postTableView.refreshControl = UIRefreshControl()
-        Self.postTableView.refreshControl?.addTarget(self, action: #selector(reloadTableView), for: .valueChanged)
-    }
-    
-    private func setupConstraints() {
+
+        view.addSubview(avatarImageView)
+        view.addSubview(emailLabel)
+        view.addSubview(logoutButton)
+
         NSLayoutConstraint.activate([
-            Self.postTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            Self.postTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            Self.postTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            Self.postTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            avatarImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            avatarImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 100),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 100),
+
+            emailLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 20),
+            emailLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+
+            logoutButton.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 40),
+            logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            logoutButton.heightAnchor.constraint(equalToConstant: 50)
         ])
+
+        avatarImageView.layer.cornerRadius = 50
+
+        logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
     }
 
-    @objc func reloadTableView() {
-        Self.postTableView.reloadData()
-        Self.postTableView.refreshControl?.endRefreshing()
-    }
-}
-
-// MARK: - Extensions
-
-extension ProfileViewController: UITableViewDataSource {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0: return 1
-        case 1: return postExamples.count
-        default:
-            assertionFailure("no registered section")
-            return 1
+    private func setupData() {
+        if let userEmail = email {
+            emailLabel.text = userEmail
+        } else if let currentUser = Auth.auth().currentUser?.email {
+            emailLabel.text = currentUser
+        } else {
+            emailLabel.text = "Email не указан"
         }
     }
 
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
-}
+    @objc private func logoutTapped() {
+        let alert = UIAlertController(title: "Выход", message: "Вы уверены, что хотите выйти?", preferredStyle: .alert)
 
-extension ProfileViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case 0:
-            let cell = Self.postTableView.dequeueReusableCell(withIdentifier: Self.photoIdent, for: indexPath) as! PhotosTableViewCell
-            return cell
-        case 1:
-            let cell = Self.postTableView.dequeueReusableCell(withIdentifier: Self.postIdent, for: indexPath) as! PostTableViewCell
-            cell.configPostArray(post: postExamples[indexPath.row])
-            return cell
-        default:
-            assertionFailure("no registered section")
-            return UITableViewCell()
-        }
-    }
+        alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Выйти", style: .destructive) { _ in
+            do {
+                try Auth.auth().signOut()
+                UserDefaults.standard.removeObject(forKey: "currentUserEmail")
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard section == 0 else { return nil }
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Self.headerIdent) as! ProfileHeaderView
-        return headerView
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section == 0 ? 220 : 0
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch indexPath.section {
-        case 0:
-            tableView.deselectRow(at: indexPath, animated: false)
-            navigationController?.pushViewController(PhotosViewController(), animated: true)
-        case 1:
-            guard let cell = tableView.cellForRow(at: indexPath) else { return }
-            if let post = cell as? PostTableViewCell {
-                post.incrementPostViewsCounter()
+                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                let sceneDelegate = windowScene?.delegate as? SceneDelegate
+                let keychain = Keychain(service: "com.navigation.app.password")
+                let hasPassword = (try? keychain.get("userPassword")) != nil
+                let passwordVC = PasswordViewController(hasPassword: hasPassword)
+                sceneDelegate?.window?.rootViewController = passwordVC
+            } catch {
+                self.showError(error.localizedDescription)
             }
-        default:
-            assertionFailure("no registered section")
-        }
+        })
+
+        present(alert, animated: true)
+    }
+
+    private func showError(_ message: String) {
+        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
-
