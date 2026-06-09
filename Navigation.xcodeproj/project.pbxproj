@@ -34,7 +34,7 @@
 		376AEC592F9F5FAE00408171 /* Checker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376AEC512F9F5FAE00408171 /* Checker.swift */; };
 		376AEC5C2F9F5FD700408171 /* LoginFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376AEC5A2F9F5FD700408171 /* LoginFactory.swift */; };
 		3786A63C2F9F5C23001199E3 /* iOSIntPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 3786A63B2F9F5C23001199E3 /* iOSIntPackage */; };
-		3794504E2FD80F3D00FD024E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3794504D2FD80F3D00FD024E /* GoogleService-Info.plist */; };
+		379450502FD815E900FD024E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3794504F2FD815E900FD024E /* GoogleService-Info.plist */; };
 		37955C302FB09EFA00A7D935 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37955C2F2FB09EFA00A7D935 /* ProfileViewModel.swift */; };
 		379694CD2FAB0F9400218731 /* FeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379694CB2FAB0F9400218731 /* FeedModel.swift */; };
 		379694CF2FAB102200218731 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379694CE2FAB102200218731 /* CustomButton.swift */; };
@@ -93,7 +93,7 @@
 		376AEC512F9F5FAE00408171 /* Checker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checker.swift; sourceTree = "<group>"; };
 		376AEC542F9F5FAE00408171 /* TestUserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUserService.swift; sourceTree = "<group>"; };
 		376AEC5A2F9F5FD700408171 /* LoginFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFactory.swift; sourceTree = "<group>"; };
-		3794504D2FD80F3D00FD024E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3794504F2FD815E900FD024E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		37955C2F2FB09EFA00A7D935 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		379694CB2FAB0F9400218731 /* FeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedModel.swift; sourceTree = "<group>"; };
 		379694CE2FAB102200218731 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
@@ -141,7 +141,7 @@
 		3601A29B28490DDF000D261A = {
 			isa = PBXGroup;
 			children = (
-				3794504D2FD80F3D00FD024E /* GoogleService-Info.plist */,
+				3794504F2FD815E900FD024E /* GoogleService-Info.plist */,
 				3601A2A628490DDF000D261A /* Navigation */,
 				3601A2A528490DDF000D261A /* Products */,
 				DDB23EBB804AA647F674F8C1 /* Pods */,
@@ -394,7 +394,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37D31DAF2FBB0C48007E122A /* Depeche Mode-Dangerous.mp3 in Resources */,
-				3794504E2FD80F3D00FD024E /* GoogleService-Info.plist in Resources */,
+				379450502FD815E900FD024E /* GoogleService-Info.plist in Resources */,
 				37D31DB02FBB0C48007E122A /* Depeche Mode-Its No Good.mp3 in Resources */,
 				37D31DB52FBB3A8F007E122A /* Depeche Mode-Little 15.mp3 in Resources */,
 				37D31DB12FBB0C48007E122A /* Depeche Mode-Behind The Wheel.mp3 in Resources */,
