@@ -26,6 +26,15 @@
 		36C5F0612850B723005EFC6C /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C5F0602850B723005EFC6C /* PhotosViewController.swift */; };
 		36C5F0632850B7B6005EFC6C /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C5F0622850B7B6005EFC6C /* PhotosCollectionViewCell.swift */; };
 		36C5F0652850C9D1005EFC6C /* PostExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C5F0642850C9D1005EFC6C /* PostExamples.swift */; };
+		37141C842FE136C200D09402 /* RealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37141C832FE136C200D09402 /* RealmService.swift */; };
+		37141C862FE1376600D09402 /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37141C852FE1376600D09402 /* Quote.swift */; };
+		37141C882FE1378E00D09402 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37141C872FE1378E00D09402 /* Category.swift */; };
+		37141C8C2FE1381100D09402 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37141C8B2FE1381100D09402 /* MainTabBarController.swift */; };
+		37141C912FE1391A00D09402 /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37141C8F2FE1391A00D09402 /* CategoriesViewController.swift */; };
+		37141C922FE1391A00D09402 /* AllQuotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37141C8D2FE1391A00D09402 /* AllQuotesViewController.swift */; };
+		37141C932FE1391A00D09402 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37141C8E2FE1391A00D09402 /* APIService.swift */; };
+		37141C942FE1391A00D09402 /* CategoryQuotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37141C902FE1391A00D09402 /* CategoryQuotesViewController.swift */; };
+		37141C962FE1392900D09402 /* RandomQuoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37141C952FE1392900D09402 /* RandomQuoteViewController.swift */; };
 		374DC20E2FBAF6C000C362FF /* AppErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374DC20D2FBAF6C000C362FF /* AppErrors.swift */; };
 		3760243F2FBC5C5B0084A9CF /* AudioPlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3760243E2FBC5C5B0084A9CF /* AudioPlayerService.swift */; };
 		376AEC502F9F5ED700408171 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376AEC4F2F9F5ED700408171 /* SceneDelegate.swift */; };
@@ -79,6 +88,15 @@
 		36C5F0602850B723005EFC6C /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		36C5F0622850B7B6005EFC6C /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
 		36C5F0642850C9D1005EFC6C /* PostExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostExamples.swift; sourceTree = "<group>"; };
+		37141C832FE136C200D09402 /* RealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmService.swift; sourceTree = "<group>"; };
+		37141C852FE1376600D09402 /* Quote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quote.swift; sourceTree = "<group>"; };
+		37141C872FE1378E00D09402 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		37141C8B2FE1381100D09402 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		37141C8D2FE1391A00D09402 /* AllQuotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllQuotesViewController.swift; sourceTree = "<group>"; };
+		37141C8E2FE1391A00D09402 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		37141C8F2FE1391A00D09402 /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
+		37141C902FE1391A00D09402 /* CategoryQuotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryQuotesViewController.swift; sourceTree = "<group>"; };
+		37141C952FE1392900D09402 /* RandomQuoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomQuoteViewController.swift; sourceTree = "<group>"; };
 		374DC20D2FBAF6C000C362FF /* AppErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppErrors.swift; sourceTree = "<group>"; };
 		3760243E2FBC5C5B0084A9CF /* AudioPlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerService.swift; sourceTree = "<group>"; };
 		376AEC4F2F9F5ED700408171 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -145,7 +163,16 @@
 		3601A2A628490DDF000D261A /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				37141C8D2FE1391A00D09402 /* AllQuotesViewController.swift */,
+				37141C8E2FE1391A00D09402 /* APIService.swift */,
+				37141C8F2FE1391A00D09402 /* CategoriesViewController.swift */,
+				37141C902FE1391A00D09402 /* CategoryQuotesViewController.swift */,
+				37141C952FE1392900D09402 /* RandomQuoteViewController.swift */,
 				37A3FCA42FD026B5008D5841 /* GoogleService-Info.plist */,
+				37141C852FE1376600D09402 /* Quote.swift */,
+				37141C872FE1378E00D09402 /* Category.swift */,
+				37141C832FE136C200D09402 /* RealmService.swift */,
+				37141C8B2FE1381100D09402 /* MainTabBarController.swift */,
 				37C8E0CD2FC430E8003190DF /* Network */,
 				37E16ACA2FBB06E800DEEF6A /* Audio */,
 				374DC2112FBAF98600C362FF /* Multimedia */,
@@ -386,9 +413,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Navigation/Pods-Navigation-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Navigation/Pods-Navigation-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -432,25 +463,34 @@
 				379694CF2FAB102200218731 /* CustomButton.swift in Sources */,
 				37A4D14E2FB4423800D4BEC2 /* TabBarCoordinator.swift in Sources */,
 				3601A2C028495339000D261A /* PostViewController.swift in Sources */,
+				37141C962FE1392900D09402 /* RandomQuoteViewController.swift in Sources */,
 				36528E37284F5E3800965BA4 /* LoginViewController.swift in Sources */,
+				37141C882FE1378E00D09402 /* Category.swift in Sources */,
 				374DC20E2FBAF6C000C362FF /* AppErrors.swift in Sources */,
 				36528E41284FE38C00965BA4 /* ExtensionUIView.swift in Sources */,
 				37A4D1522FB4428F00D4BEC2 /* ProfileCoordinator.swift in Sources */,
 				37A4D14A2FB441A000D4BEC2 /* Coordinator.swift in Sources */,
 				37A4D1502FB4426400D4BEC2 /* FeedCoordinator.swift in Sources */,
 				379694CD2FAB0F9400218731 /* FeedModel.swift in Sources */,
+				37141C912FE1391A00D09402 /* CategoriesViewController.swift in Sources */,
+				37141C922FE1391A00D09402 /* AllQuotesViewController.swift in Sources */,
+				37141C932FE1391A00D09402 /* APIService.swift in Sources */,
+				37141C942FE1391A00D09402 /* CategoryQuotesViewController.swift in Sources */,
 				37955C302FB09EFA00A7D935 /* ProfileViewModel.swift in Sources */,
 				376AEC572F9F5FAE00408171 /* TestUserService.swift in Sources */,
+				37141C8C2FE1381100D09402 /* MainTabBarController.swift in Sources */,
 				37C8E0D12FC4310D003190DF /* AppConfiguration.swift in Sources */,
 				376AEC592F9F5FAE00408171 /* Checker.swift in Sources */,
 				36C5F05E2850B4A6005EFC6C /* PhotoExamples.swift in Sources */,
 				37C8E0CF2FC430FF003190DF /* NetworkService.swift in Sources */,
 				37A3FCA12FD0205F008D5841 /* CheckerService.swift in Sources */,
 				3601A2C7284A776A000D261A /* ProfileHeaderView.swift in Sources */,
+				37141C842FE136C200D09402 /* RealmService.swift in Sources */,
 				36C5F0652850C9D1005EFC6C /* PostExamples.swift in Sources */,
 				36C5F0612850B723005EFC6C /* PhotosViewController.swift in Sources */,
 				376AEC502F9F5ED700408171 /* SceneDelegate.swift in Sources */,
 				37A4D14C2FB441E700D4BEC2 /* AppCoordinator.swift in Sources */,
+				37141C862FE1376600D09402 /* Quote.swift in Sources */,
 				37A3FFAD2FC6E6C0002BEE70 /* TodoModel.swift in Sources */,
 				376AEC5C2F9F5FD700408171 /* LoginFactory.swift in Sources */,
 				37DB33F72FBC672B00CF70EE /* FeedViewController.swift in Sources */,

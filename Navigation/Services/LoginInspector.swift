@@ -17,39 +17,35 @@ final class LoginInspector: LoginViewControllerDelegate {
     }
     
     func checkCredentials(email: String, password: String) {
-        print("🔍🔍🔍 LoginInspector.checkCredentials ВЫЗВАН для: \(email)")
+        print("🔍 LoginInspector.checkCredentials вызван для: \(email)")
         
         checkerService.checkCredentials(email: email, password: password) { [weak self] result in
-            print("📡 Получен результат от Firebase")
             DispatchQueue.main.async {
                 switch result {
                 case .success:
                     print("✅ Успех в LoginInspector")
                     self?.viewController?.loginSuccess()
                 case .failure(let error as NSError):
-                    print("❌ Ошибка в LoginInspector: \(error.code) - \(error.localizedDescription)")
+                    print("❌ Ошибка: \(error.code) - \(error.localizedDescription)")
                     if error.code == AuthErrorCode.userNotFound.rawValue {
                         print("👤 Пользователь не найден, регистрируем...")
                         self?.signUp(email: email, password: password)
                     } else {
                         self?.viewController?.showError(error.localizedDescription)
                     }
-                case .failure(let error):
-                    print("❌ Ошибка в LoginInspector: \(error.localizedDescription)")
-                    self?.viewController?.showError(error.localizedDescription)
                 }
             }
         }
     }
     
     private func signUp(email: String, password: String) {
-        print("📝📝📝 LoginInspector.signUp ВЫЗВАН для: \(email)")
+        print("📝 LoginInspector.signUp вызван для: \(email)")
         
         checkerService.signUp(email: email, password: password) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
-                    print("✅ Регистрация успешна в LoginInspector")
+                    print("✅ Регистрация успешна")
                     self?.viewController?.loginSuccess()
                 case .failure(let error):
                     print("❌ Ошибка регистрации: \(error.localizedDescription)")

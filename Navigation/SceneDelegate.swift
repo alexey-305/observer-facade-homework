@@ -4,7 +4,6 @@ import FirebaseAuth
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var coordinator: AppCoordinator?
 
     func scene(_ scene: UIScene,
                willConnectTo session: UISceneSession,
@@ -15,11 +14,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
 
-        let navigationController = UINavigationController()
-        coordinator = AppCoordinator(navigationController: navigationController)
-        coordinator?.start()
-
-        window.rootViewController = navigationController
+        // Запускаем Realm приложение
+        let tabBarController = MainTabBarController()
+        window.rootViewController = tabBarController
         window.makeKeyAndVisible()
     }
     
