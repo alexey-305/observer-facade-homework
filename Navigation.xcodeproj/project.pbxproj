@@ -55,6 +55,10 @@
 		37A4D1502FB4426400D4BEC2 /* FeedCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D14F2FB4426400D4BEC2 /* FeedCoordinator.swift */; };
 		37A4D1522FB4428F00D4BEC2 /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D1512FB4428F00D4BEC2 /* ProfileCoordinator.swift */; };
 		37A4D1582FB44DAA00D4BEC2 /* LoginInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A4D1572FB44DAA00D4BEC2 /* LoginInspector.swift */; };
+		37BFC0152FE290C7004636FF /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37BFC0142FE290C7004636FF /* CoreData.framework */; };
+		37BFC0182FE29103004636FF /* PostModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 37BFC0162FE29103004636FF /* PostModel.xcdatamodeld */; };
+		37BFC01A2FE29201004636FF /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BFC0192FE29201004636FF /* CoreDataManager.swift */; };
+		37BFC01C2FE2921C004636FF /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BFC01B2FE2921C004636FF /* FavoritesViewController.swift */; };
 		37C8E0CF2FC430FF003190DF /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C8E0CE2FC430FF003190DF /* NetworkService.swift */; };
 		37C8E0D12FC4310D003190DF /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C8E0D02FC4310D003190DF /* AppConfiguration.swift */; };
 		37D31D952FBB0A32007E122A /* AudioPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D31D942FBB0A32007E122A /* AudioPlayerViewController.swift */; };
@@ -116,6 +120,10 @@
 		37A4D14F2FB4426400D4BEC2 /* FeedCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCoordinator.swift; sourceTree = "<group>"; };
 		37A4D1512FB4428F00D4BEC2 /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		37A4D1572FB44DAA00D4BEC2 /* LoginInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInspector.swift; sourceTree = "<group>"; };
+		37BFC0142FE290C7004636FF /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		37BFC0172FE29103004636FF /* PostModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PostModel.xcdatamodel; sourceTree = "<group>"; };
+		37BFC0192FE29201004636FF /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		37BFC01B2FE2921C004636FF /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		37C8E0CE2FC430FF003190DF /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		37C8E0D02FC4310D003190DF /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
 		37D31D942FBB0A32007E122A /* AudioPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerViewController.swift; sourceTree = "<group>"; };
@@ -135,6 +143,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3786A63C2F9F5C23001199E3 /* iOSIntPackage in Frameworks */,
+				37BFC0152FE290C7004636FF /* CoreData.framework in Frameworks */,
 				26B120472C78A3C84306554A /* Pods_Navigation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -192,6 +201,9 @@
 				37818D4A2FAB0E2B0081E513 /* Views */,
 				37A3FFAA2FC6E4AF002BEE70 /* Planet.swift */,
 				37A3FFAC2FC6E6BF002BEE70 /* TodoModel.swift */,
+				37BFC0162FE29103004636FF /* PostModel.xcdatamodeld */,
+				37BFC0192FE29201004636FF /* CoreDataManager.swift */,
+				37BFC01B2FE2921C004636FF /* FavoritesViewController.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -314,6 +326,7 @@
 		703B0219F96D5B04931A997F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				37BFC0142FE290C7004636FF /* CoreData.framework */,
 				C7BB823F43A1CA8798A6736B /* Pods_Navigation.framework */,
 			);
 			name = Frameworks;
@@ -463,6 +476,7 @@
 				379694CF2FAB102200218731 /* CustomButton.swift in Sources */,
 				37A4D14E2FB4423800D4BEC2 /* TabBarCoordinator.swift in Sources */,
 				3601A2C028495339000D261A /* PostViewController.swift in Sources */,
+				37BFC01C2FE2921C004636FF /* FavoritesViewController.swift in Sources */,
 				37141C962FE1392900D09402 /* RandomQuoteViewController.swift in Sources */,
 				36528E37284F5E3800965BA4 /* LoginViewController.swift in Sources */,
 				37141C882FE1378E00D09402 /* Category.swift in Sources */,
@@ -474,6 +488,7 @@
 				379694CD2FAB0F9400218731 /* FeedModel.swift in Sources */,
 				37141C912FE1391A00D09402 /* CategoriesViewController.swift in Sources */,
 				37141C922FE1391A00D09402 /* AllQuotesViewController.swift in Sources */,
+				37BFC01A2FE29201004636FF /* CoreDataManager.swift in Sources */,
 				37141C932FE1391A00D09402 /* APIService.swift in Sources */,
 				37141C942FE1391A00D09402 /* CategoryQuotesViewController.swift in Sources */,
 				37955C302FB09EFA00A7D935 /* ProfileViewModel.swift in Sources */,
@@ -492,6 +507,7 @@
 				37A4D14C2FB441E700D4BEC2 /* AppCoordinator.swift in Sources */,
 				37141C862FE1376600D09402 /* Quote.swift in Sources */,
 				37A3FFAD2FC6E6C0002BEE70 /* TodoModel.swift in Sources */,
+				37BFC0182FE29103004636FF /* PostModel.xcdatamodeld in Sources */,
 				376AEC5C2F9F5FD700408171 /* LoginFactory.swift in Sources */,
 				37DB33F72FBC672B00CF70EE /* FeedViewController.swift in Sources */,
 				36528E39284F700900965BA4 /* ExtensionUIImage.swift in Sources */,
@@ -742,6 +758,19 @@
 			productName = iOSIntPackage;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		37BFC0162FE29103004636FF /* PostModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				37BFC0172FE29103004636FF /* PostModel.xcdatamodel */,
+			);
+			currentVersion = 37BFC0172FE29103004636FF /* PostModel.xcdatamodel */;
+			path = PostModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 3601A29C28490DDF000D261A /* Project object */;
 }

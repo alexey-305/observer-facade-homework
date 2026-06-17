@@ -1,119 +1,115 @@
 import UIKit
+import CoreData
 
-final class FeedViewController: UIViewController {
+class FeedViewController: UIViewController {
     
-    weak var coordinator: FeedCoordinator?
+    // Используем существующую модель Post из проекта
+    private var posts: [Post] = []
     
-    private let secretWord = "Swift"
-    
-    private let guessTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Угадайте слово..."
-        textField.font = UIFont.systemFont(ofSize: 16)
-        textField.backgroundColor = .systemGray6
-        textField.layer.cornerRadius = 10
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.lightGray.cgColor
-        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
-        textField.leftViewMode = .always
-        textField.autocapitalizationType = .none
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        return textField
-    }()
-    
-    private let checkGuessButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Проверить", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 10
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private let resultLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Введите слово и нажмите Проверить"
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private let tableView: UITableView = {
+        let tv = UITableView()
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        return tv
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "Feed"
+        title = "Лента"
         
-        setupViews()
-        setupConstraints()
-        setupActions()
+        loadPosts()
+        setupTableView()
+        setupDoubleTapGesture()
     }
     
-    private func setupViews() {
-        view.addSubview(guessTextField)
-        view.addSubview(checkGuessButton)
-        view.addSubview(resultLabel)
-    }
-    
-    private func setupConstraints() {
+    private func setupTableView() {
+        view.addSubview(tableView)
         NSLayoutConstraint.activate([
-            guessTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            guessTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
-            guessTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            guessTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            guessTextField.heightAnchor.constraint(equalToConstant: 50),
-            
-            checkGuessButton.topAnchor.constraint(equalTo: guessTextField.bottomAnchor, constant: 20),
-            checkGuessButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            checkGuessButton.widthAnchor.constraint(equalToConstant: 200),
-            checkGuessButton.heightAnchor.constraint(equalToConstant: 50),
-            
-            resultLabel.topAnchor.constraint(equalTo: checkGuessButton.bottomAnchor, constant: 30),
-            resultLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            resultLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        tableView.dataSource = self
+        tableView.delegate = self
     }
     
-    private func setupActions() {
-        checkGuessButton.addTarget(self, action: #selector(checkGuess), for: .touchUpInside)
+    private func setupDoubleTapGesture() {
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
+        doubleTap.numberOfTapsRequired = 2
+        tableView.addGestureRecognizer(doubleTap)
     }
     
-    enum GuessWordError: Error {
-        case emptyWord
-        case incorrectWord
+    private func loadPosts() {
+        // Используем существующую модель Post из проекта
+        posts = [
+            Post(author: "Алексей", description: "Первый пост в ленте! Сегодня отличная погода ☀️", image: "img1", likes: 5, views: 100),
+            Post(author: "Мария", description: "Изучаю Swift и создаю крутые приложения 🚀", image: "img2", likes: 12, views: 250),
+            Post(author: "Иван", description: "CoreData — мощный инструмент для хранения данных", image: "img3", likes: 8, views: 180),
+            Post(author: "Елена", description: "Realm vs CoreData: что выбрать для проекта? 🤔", image: "img4", likes: 15, views: 320)
+        ]
+        tableView.reloadData()
     }
     
-    private func checkWordWithResult(word: String) -> Result<String, GuessWordError> {
-        if word.isEmpty {
-            return .failure(.emptyWord)
-        }
-        if word.lowercased() != secretWord.lowercased() {
-            return .failure(.incorrectWord)
-        }
-        return .success("✅ Верно! Загаданное слово: Swift")
-    }
-    
-    @objc private func checkGuess() {
-        guard let guess = guessTextField.text else { return }
+    @objc private func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
+        let point = gesture.location(in: tableView)
+        guard let indexPath = tableView.indexPathForRow(at: point) else { return }
         
-        let result = checkWordWithResult(word: guess)
+        let post = posts[indexPath.row]
+        let postId = "\(post.author)_\(post.description)_\(post.image)" // генерируем ID
         
-        switch result {
-        case .success(let message):
-            resultLabel.text = message
-            resultLabel.textColor = .green
-        case .failure(let error):
-            switch error {
-            case .emptyWord:
-                resultLabel.text = "Пожалуйста, введите слово"
-            case .incorrectWord:
-                resultLabel.text = "❌ Неверно! Попробуйте ещё раз"
+        // Проверяем, есть ли уже в избранном
+        let fetchRequest: NSFetchRequest<FavoritePost> = FavoritePost.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", postId)
+        
+        do {
+            let existing = try CoreDataManager.shared.context.fetch(fetchRequest)
+            if !existing.isEmpty {
+                showAlert(title: "Уже в избранном", message: "Пост уже сохранён")
+                return
             }
-            resultLabel.textColor = .red
+        } catch {
+            print("Ошибка проверки: \(error)")
         }
         
-        guessTextField.text = ""
+        // Сохраняем в CoreData
+        CoreDataManager.shared.savePost(
+            id: postId,
+            title: post.description,
+            text: post.description,
+            author: post.author,
+            likes: post.likes,
+            imageName: post.image
+        )
+        
+        showAlert(title: "Добавлено в избранное ❤️", message: "Пост сохранён")
+    }
+    
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+}
+
+extension FeedViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return posts.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let post = posts[indexPath.row]
+        cell.textLabel?.text = post.description
+        cell.textLabel?.numberOfLines = 2
+        cell.detailTextLabel?.text = "👤 \(post.author) ❤️ \(post.likes) 👁️ \(post.views)"
+        return cell
+    }
+}
+
+extension FeedViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
