@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24901" systemVersion="25F80" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="FavoritePost" representedClassName="FavoritePost" syncable="YES" codeGenerationType="class">
-        <attribute name="authorName" optional="YES" attributeType="String"/>
+        <attribute name="authorName" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
         <attribute name="imageName" optional="YES" attributeType="String"/>

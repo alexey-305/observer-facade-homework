@@ -3,40 +3,58 @@ import RealmSwift
 
 class RealmService {
     static let shared = RealmService()
-    private let realm = try! Realm()
     
-    // Сохранить цитату
-    func saveQuote(text: String, category: String) {
-        let quote = Quote(text: text, category: category)
-        
-        try! realm.write {
-            realm.add(quote, update: .modified)
-            
-            // Обновляем или создаём категорию
-            if let existingCategory = realm.object(ofType: Category.self, forPrimaryKey: category) {
-                if !existingCategory.quotes.contains(where: { $0.text == text }) {
-                    existingCategory.quotes.append(quote)
-                }
-            } else {
-                let newCategory = Category(name: category)
-                newCategory.quotes.append(quote)
-                realm.add(newCategory, update: .modified)
-            }
+    private var realm: Realm?
+    
+    private init() {
+        do {
+            realm = try Realm()
+            print("✅ Realm инициализирован успешно")
+        } catch {
+            print("❌ Ошибка инициализации Realm: \(error)")
         }
     }
     
-    // Получить все цитаты (сортировка по дате)
-    func getAllQuotes() -> Results<Quote> {
+    func saveQuote(text: String, category: String) {
+        guard let realm = realm else {
+            print("❌ Realm не инициализирован")
+            return
+        }
+        
+        let quote = Quote(text: text, category: category)
+        
+        do {
+            try realm.write {
+                realm.add(quote, update: .modified)
+                
+                if let existingCategory = realm.object(ofType: Category.self, forPrimaryKey: category) {
+                    if !existingCategory.quotes.contains(where: { $0.text == text }) {
+                        existingCategory.quotes.append(quote)
+                    }
+                } else {
+                    let newCategory = Category(name: category)
+                    newCategory.quotes.append(quote)
+                    realm.add(newCategory, update: .modified)
+                }
+            }
+            print("✅ Цитата сохранена")
+        } catch {
+            print("❌ Ошибка сохранения цитаты: \(error)")
+        }
+    }
+    
+    func getAllQuotes() -> Results<Quote>? {
+        guard let realm = realm else { return nil }
         return realm.objects(Quote.self).sorted(byKeyPath: "createdAt", ascending: false)
     }
     
-    // Получить все категории
-    func getAllCategories() -> Results<Category> {
+    func getAllCategories() -> Results<Category>? {
+        guard let realm = realm else { return nil }
         return realm.objects(Category.self).sorted(byKeyPath: "name", ascending: true)
     }
     
-    // Получить цитаты по категории
-    func getQuotes(for category: String) -> Results<Quote> {
+    func getQuotes(for category: String) -> Results<Quote>? {
+        guard let realm = realm else { return nil }
         return realm.objects(Quote.self).filter("category == %@", category).sorted(byKeyPath: "createdAt", ascending: false)
     }
 }

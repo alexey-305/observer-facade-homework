@@ -3,7 +3,6 @@ import CoreData
 
 class FeedViewController: UIViewController {
     
-    // Используем существующую модель Post из проекта
     private var posts: [Post] = []
     
     private let tableView: UITableView = {
@@ -42,7 +41,6 @@ class FeedViewController: UIViewController {
     }
     
     private func loadPosts() {
-        // Используем существующую модель Post из проекта
         posts = [
             Post(author: "Алексей", description: "Первый пост в ленте! Сегодня отличная погода ☀️", image: "img1", likes: 5, views: 100),
             Post(author: "Мария", description: "Изучаю Swift и создаю крутые приложения 🚀", image: "img2", likes: 12, views: 250),
@@ -57,14 +55,14 @@ class FeedViewController: UIViewController {
         guard let indexPath = tableView.indexPathForRow(at: point) else { return }
         
         let post = posts[indexPath.row]
-        let postId = "\(post.author)_\(post.description)_\(post.image)" // генерируем ID
+        let postId = "\(post.author)_\(post.description)_\(post.image)"
         
-        // Проверяем, есть ли уже в избранном
+        // Проверяем, есть ли уже в избранном (используем viewContext)
         let fetchRequest: NSFetchRequest<FavoritePost> = FavoritePost.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", postId)
         
         do {
-            let existing = try CoreDataManager.shared.context.fetch(fetchRequest)
+            let existing = try CoreDataManager.shared.viewContext.fetch(fetchRequest)
             if !existing.isEmpty {
                 showAlert(title: "Уже в избранном", message: "Пост уже сохранён")
                 return
