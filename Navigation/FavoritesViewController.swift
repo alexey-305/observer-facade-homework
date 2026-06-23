@@ -4,9 +4,31 @@ import CoreData
 class FavoritesViewController: UIViewController {
     
     private let coreDataManager = CoreDataManager.shared
-    private var favoritePosts: [FavoritePost] = []
     private var isFiltering: Bool = false
     private var currentFilterAuthor: String?
+    
+    private lazy var fetchedResultsController: NSFetchedResultsController<FavoritePost> = {
+        let fetchRequest: NSFetchRequest<FavoritePost> = FavoritePost.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "createdAt", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        fetchRequest.fetchBatchSize = 20
+        
+        let controller = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: coreDataManager.viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        controller.delegate = self
+        
+        do {
+            try controller.performFetch()
+        } catch {
+            print("❌ Ошибка выполнения fetch: \(error)")
+        }
+        
+        return controller
+    }()
     
     private let tableView: UITableView = {
         let tv = UITableView()
@@ -15,7 +37,6 @@ class FavoritesViewController: UIViewController {
         return tv
     }()
     
-    // MARK: - Navigation Bar Buttons
     private lazy var filterButton: UIBarButtonItem = {
         let button = UIBarButtonItem(
             title: "🔍",
@@ -41,19 +62,15 @@ class FavoritesViewController: UIViewController {
         view.backgroundColor = .white
         title = "Избранное"
         
-        setupNavigationBar()
+        navigationItem.rightBarButtonItems = [filterButton, clearFilterButton]
+        
         setupTableView()
-        loadData()
+        updateFetchRequest()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadData()
-    }
-    
-    // MARK: - Setup
-    private func setupNavigationBar() {
-        navigationItem.rightBarButtonItems = [filterButton, clearFilterButton]
+        updateFetchRequest()
     }
     
     private func setupTableView() {
@@ -68,45 +85,26 @@ class FavoritesViewController: UIViewController {
         tableView.delegate = self
     }
     
-    private func loadData() {
-        if isFiltering, let author = currentFilterAuthor {
-            favoritePosts = coreDataManager.fetchPosts(byAuthor: author)
-        } else {
-            favoritePosts = coreDataManager.fetchAllPosts()
-        }
-        tableView.reloadData()
+    private func updateFetchRequest() {
+        let fetchRequest: NSFetchRequest<FavoritePost> = FavoritePost.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "createdAt", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        fetchRequest.fetchBatchSize = 20
         
-        if favoritePosts.isEmpty {
-            showEmptyState()
-        } else {
-            hideEmptyState()
+        if isFiltering, let author = currentFilterAuthor, !author.isEmpty {
+            fetchRequest.predicate = NSPredicate(format: "authorName CONTAINS[cd] %@", author)
+        }
+        
+        fetchedResultsController.fetchRequest.predicate = fetchRequest.predicate
+        
+        do {
+            try fetchedResultsController.performFetch()
+            tableView.reloadData()
+        } catch {
+            print("❌ Ошибка обновления fetch: \(error)")
         }
     }
     
-    private func showEmptyState() {
-        let label = UILabel()
-        label.text = isFiltering ? "Нет постов автора \(currentFilterAuthor ?? "")" : "Нет избранных постов"
-        label.textAlignment = .center
-        label.textColor = .gray
-        label.font = .systemFont(ofSize: 16)
-        label.numberOfLines = 0
-        label.tag = 999
-        label.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(label)
-        
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
-        ])
-    }
-    
-    private func hideEmptyState() {
-        view.viewWithTag(999)?.removeFromSuperview()
-    }
-    
-    // MARK: - Filter Actions
     @objc private func filterButtonTapped() {
         let alert = UIAlertController(
             title: "Фильтр по автору",
@@ -126,8 +124,8 @@ class FavoritesViewController: UIViewController {
             }
             self?.currentFilterAuthor = text
             self?.isFiltering = true
-            self?.loadData()
             self?.title = "Фильтр: \(text)"
+            self?.updateFetchRequest()
         }
         
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
@@ -142,7 +140,7 @@ class FavoritesViewController: UIViewController {
         isFiltering = false
         currentFilterAuthor = nil
         title = "Избранное"
-        loadData()
+        updateFetchRequest()
         
         showAlert(title: "Фильтр снят", message: "Показаны все посты")
     }
@@ -156,17 +154,26 @@ class FavoritesViewController: UIViewController {
 
 // MARK: - UITableViewDataSource
 extension FavoritesViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return fetchedResultsController.sections?.count ?? 0
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return favoritePosts.count
+        return fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let post = favoritePosts[indexPath.row]
+        let post = fetchedResultsController.object(at: indexPath)
         
         cell.textLabel?.text = post.titleText ?? "Без названия"
         cell.textLabel?.numberOfLines = 2
-        cell.detailTextLabel?.text = "👤 \(post.authorName ?? "Неизвестный") ❤️ \(post.likesCount)"
+        cell.textLabel?.font = .systemFont(ofSize: 16)
+        
+        // ПОКАЗЫВАЕМ АВТОРА
+        cell.detailTextLabel?.text = "✍️ \(post.authorName ?? "Неизвестный")  ❤️ \(post.likesCount)"
+        cell.detailTextLabel?.font = .systemFont(ofSize: 12)
+        cell.detailTextLabel?.textColor = .gray
         
         return cell
     }
@@ -178,7 +185,6 @@ extension FavoritesViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    // MARK: - Swipe to Delete
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Удалить") { [weak self] _, _, completion in
             guard let self = self else {
@@ -186,19 +192,8 @@ extension FavoritesViewController: UITableViewDelegate {
                 return
             }
             
-            let postToDelete = self.favoritePosts[indexPath.row]
-            
-            // Удаляем из CoreData
-            self.coreDataManager.deletePost(postToDelete)
-            
-            // Удаляем из массива и таблицы
-            self.favoritePosts.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            
-            // Если после удаления список пуст — показываем empty state
-            if self.favoritePosts.isEmpty {
-                self.loadData()
-            }
+            let post = self.fetchedResultsController.object(at: indexPath)
+            self.coreDataManager.deletePost(post)
             
             completion(true)
         }
@@ -206,5 +201,44 @@ extension FavoritesViewController: UITableViewDelegate {
         
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         return configuration
+    }
+}
+
+// MARK: - NSFetchedResultsControllerDelegate
+extension FavoritesViewController: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange anObject: Any,
+                    at indexPath: IndexPath?,
+                    for type: NSFetchedResultsChangeType,
+                    newIndexPath: IndexPath?) {
+        
+        switch type {
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                tableView.insertRows(at: [newIndexPath], with: .automatic)
+            }
+        case .delete:
+            if let indexPath = indexPath {
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+            }
+        case .update:
+            if let indexPath = indexPath {
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+        case .move:
+            if let indexPath = indexPath, let newIndexPath = newIndexPath {
+                tableView.moveRow(at: indexPath, to: newIndexPath)
+            }
+        @unknown default:
+            break
+        }
     }
 }
