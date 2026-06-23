@@ -57,7 +57,7 @@ class FeedViewController: UIViewController {
         let post = posts[indexPath.row]
         let postId = "\(post.author)_\(post.description)_\(post.image)"
         
-        // Проверяем, есть ли уже в избранном (используем viewContext)
+        // Проверяем, есть ли уже в избранном
         let fetchRequest: NSFetchRequest<FavoritePost> = FavoritePost.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", postId)
         
@@ -99,9 +99,17 @@ extension FeedViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let post = posts[indexPath.row]
+        
+        // Основной текст — описание поста
         cell.textLabel?.text = post.description
         cell.textLabel?.numberOfLines = 2
-        cell.detailTextLabel?.text = "👤 \(post.author) ❤️ \(post.likes) 👁️ \(post.views)"
+        cell.textLabel?.font = .systemFont(ofSize: 16)
+        
+        // Детальный текст — автор и лайки (ТЕПЕРЬ ВИДНО АВТОРА!)
+        cell.detailTextLabel?.text = "✍️ \(post.author)  ❤️ \(post.likes)  👁️ \(post.views)"
+        cell.detailTextLabel?.font = .systemFont(ofSize: 12)
+        cell.detailTextLabel?.textColor = .gray
+        
         return cell
     }
 }
