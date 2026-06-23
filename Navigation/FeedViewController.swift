@@ -3,24 +3,32 @@ import CoreData
 
 class FeedViewController: UIViewController {
     
+    // MARK: - Properties
+    
     private var posts: [Post] = []
+    
+    // MARK: - UI Elements
     
     private let tableView: UITableView = {
         let tv = UITableView()
         tv.translatesAutoresizingMaskIntoConstraints = false
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        // Не регистрируем UITableViewCell.self — используем .subtitle через dequeue вручную
         return tv
     }()
+    
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Лента"
         
-        loadPosts()
-        setupTableView()
-        setupDoubleTapGesture()
+        setupTableView()        // сначала настраиваем таблицу и dataSource
+        setupDoubleTapGesture() // потом жест
+        loadPosts()             // потом данные
     }
+    
+    // MARK: - Setup
     
     private func setupTableView() {
         view.addSubview(tableView)
@@ -40,6 +48,8 @@ class FeedViewController: UIViewController {
         tableView.addGestureRecognizer(doubleTap)
     }
     
+    // MARK: - Data
+    
     private func loadPosts() {
         posts = [
             Post(author: "Алексей", description: "Первый пост в ленте! Сегодня отличная погода ☀️", image: "img1", likes: 5, views: 100),
@@ -50,24 +60,21 @@ class FeedViewController: UIViewController {
         tableView.reloadData()
     }
     
+    // MARK: - Actions
+    
     @objc private func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
         let point = gesture.location(in: tableView)
         guard let indexPath = tableView.indexPathForRow(at: point) else { return }
         
         let post = posts[indexPath.row]
-        let postId = "\(post.author)_\(post.description)_\(post.image)"
         
-        let fetchRequest: NSFetchRequest<FavoritePost> = FavoritePost.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %@", postId)
+        // Используем стабильный UUID из модели Post
+        let postId = post.id
         
-        do {
-            let existing = try CoreDataManager.shared.viewContext.fetch(fetchRequest)
-            if !existing.isEmpty {
-                showAlert(title: "Уже в избранном", message: "Пост уже сохранён")
-                return
-            }
-        } catch {
-            print("Ошибка проверки: \(error)")
+        // Проверка на дубликат инкапсулирована в CoreDataManager
+        if CoreDataManager.shared.isPostAlreadySaved(id: postId) {
+            showAlert(title: "Уже в избранном", message: "Пост уже сохранён")
+            return
         }
         
         CoreDataManager.shared.savePost(
@@ -82,6 +89,8 @@ class FeedViewController: UIViewController {
         showAlert(title: "Добавлено в избранное ❤️", message: "Пост сохранён")
     }
     
+    // MARK: - Helpers
+    
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -89,28 +98,39 @@ class FeedViewController: UIViewController {
     }
 }
 
+// MARK: - UITableViewDataSource
+
 extension FeedViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        // Стиль .subtitle обязателен чтобы detailTextLabel отображался
+        var cell = tableView.dequeueReusableCell(withIdentifier: "subtitleCell")
+        if cell == nil {
+            cell = UITableViewCell(style: .subtitle, reuseIdentifier: "subtitleCell")
+        }
+        
         let post = posts[indexPath.row]
         
-        cell.textLabel?.text = post.description
-        cell.textLabel?.numberOfLines = 2
-        cell.textLabel?.font = .systemFont(ofSize: 16)
+        cell?.textLabel?.text = post.description
+        cell?.textLabel?.numberOfLines = 2
+        cell?.textLabel?.font = .systemFont(ofSize: 16)
         
-        cell.detailTextLabel?.text = "✍️ \(post.author)  ❤️ \(post.likes)  👁️ \(post.views)"
-        cell.detailTextLabel?.font = .systemFont(ofSize: 12)
-        cell.detailTextLabel?.textColor = .gray
+        cell?.detailTextLabel?.text = "✍️ \(post.author)  ❤️ \(post.likes)  👁️ \(post.views)"
+        cell?.detailTextLabel?.font = .systemFont(ofSize: 12)
+        cell?.detailTextLabel?.textColor = .gray
         
-        return cell
+        return cell ?? UITableViewCell()
     }
 }
 
+// MARK: - UITableViewDelegate
+
 extension FeedViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }

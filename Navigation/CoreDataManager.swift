@@ -28,23 +28,26 @@ class CoreDataManager {
         return context
     }()
     
-    // MARK: - CRUD Operations (на backgroundContext)
+    // MARK: - CREATE
     
     func savePost(id: String, title: String, text: String, author: String, likes: Int, imageName: String?) {
         backgroundContext.perform { [weak self] in
             guard let self = self else { return }
             
+            // Проверка дубликата на backgroundContext перед сохранением
             let fetchRequest: NSFetchRequest<FavoritePost> = FavoritePost.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %@", id)
+            fetchRequest.fetchLimit = 1
             
             do {
-                let existing = try self.backgroundContext.fetch(fetchRequest)
-                if !existing.isEmpty {
+                let count = try self.backgroundContext.count(for: fetchRequest)
+                if count > 0 {
                     print("⏳ Пост уже сохранён")
                     return
                 }
             } catch {
                 print("❌ Ошибка проверки: \(error)")
+                return
             }
             
             let post = FavoritePost(context: self.backgroundContext)
@@ -65,11 +68,13 @@ class CoreDataManager {
         }
     }
     
+    // MARK: - READ
+    
     func fetchAllPosts() -> [FavoritePost] {
         let fetchRequest: NSFetchRequest<FavoritePost> = FavoritePost.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "createdAt", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
-        fetchRequest.fetchBatchSize = 20  // ← ОПТИМИЗАЦИЯ
+        fetchRequest.fetchBatchSize = 20
         
         do {
             return try viewContext.fetch(fetchRequest)
@@ -79,13 +84,24 @@ class CoreDataManager {
         }
     }
     
+    // MARK: - READ (проверка дубликата с главного потока)
+    
+    /// Проверяет наличие поста по id на viewContext (вызывается с главного потока)
+    func isPostAlreadySaved(id: String) -> Bool {
+        let fetchRequest: NSFetchRequest<FavoritePost> = FavoritePost.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id)
+        fetchRequest.fetchLimit = 1  // оптимизация — нам нужен только факт наличия
+        let count = (try? viewContext.count(for: fetchRequest)) ?? 0
+        return count > 0
+    }
+    
     // MARK: - DELETE
     
     func deletePost(_ post: FavoritePost) {
         backgroundContext.perform { [weak self] in
             guard let self = self else { return }
             
-            // Получаем объект в контексте background
+            // Переносим объект в backgroundContext по objectID
             let objectID = post.objectID
             let object = self.backgroundContext.object(with: objectID)
             
@@ -107,7 +123,7 @@ class CoreDataManager {
         fetchRequest.predicate = NSPredicate(format: "authorName CONTAINS[cd] %@", author)
         let sortDescriptor = NSSortDescriptor(key: "createdAt", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
-        fetchRequest.fetchBatchSize = 20  // ← ОПТИМИЗАЦИЯ
+        fetchRequest.fetchBatchSize = 20
         
         do {
             return try viewContext.fetch(fetchRequest)
